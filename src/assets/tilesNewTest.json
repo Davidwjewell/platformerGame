@@ -1,0 +1,41 @@
+{
+	"textures": [
+		{
+			"image": "tilesNewTest.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 398,
+				"h": 200
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "tileset_Extruded.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 396,
+						"h": 198
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 396,
+						"h": 198
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 396,
+						"h": 198
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:0a4d68f28c18f3c2db062ad054083894:3cf3f23f45f85df086c8e8eb136ed400:c3f9a710c77c56b00ae119bd973858d7$"
+	}
+}

@@ -1,0 +1,68 @@
+{ "columns":0,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"tsx",
+         "target":"background.tsx"
+        }
+    },
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"backGround",
+ "spacing":0,
+ "tilecount":7,
+ "tiledversion":"1.3.2",
+ "tileheight":64,
+ "tiles":[
+        {
+         "id":0,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Blue.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":1,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Brown.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":2,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Gray.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":3,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Green.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":4,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Pink.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":5,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Purple.png",
+         "imageheight":64,
+         "imagewidth":64
+        }, 
+        {
+         "id":6,
+         "image":"..\/..\/..\/..\/Downloads\/Pixel Adventure 1\/Free\/Background\/Yellow.png",
+         "imageheight":64,
+         "imagewidth":64
+        }],
+ "tilewidth":64,
+ "type":"tileset",
+ "version":1.2
+}
