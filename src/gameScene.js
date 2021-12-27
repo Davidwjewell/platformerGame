@@ -1,7 +1,7 @@
 
 import {Player} from "./player.js";
-import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched} from "./collisions.js";
-import { loadEnemies, loadFlag, loadFruits, loadTraps } from "./loadfunctions.js";
+import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox} from "./collisions.js";
+import { loadEnemies, loadFlag, loadFruits, loadObjects, loadTraps } from "./loadfunctions.js";
 import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
@@ -22,7 +22,8 @@ export class GameScene extends Phaser.Scene{
   if (Object.entries(levelToLoad).length === 0)
   {
     //load first level
-    this.level=levels.LEVEL_1;
+    //this.level=levels.LEVEL_1;
+    this.level=levels.LEVEL_2;
   }
   
 else
@@ -58,9 +59,13 @@ preload() {
   this.load.spritesheet('snailEnemyShellIdle', 'src/assets/Snail/snail_Shell_Idle.png', { frameWidth:38, frameHeight : 24});
   this.load.spritesheet('snailEnemyShellHitWall', 'src/assets/Snail/snail_Shell_Hit_Wall.png', { frameWidth:38, frameHeight : 24});
   this.load.spritesheet('snailEnemyShellHitTop', 'src/assets/Snail/snail_Shell_Hit_Top.png', { frameWidth:38, frameHeight : 24});
-
-
-  
+//Box
+  this.load.image('box1Idle', 'src/assets/box/box1_idle.png');
+  this.load.spritesheet('box1Hit','src/assets/box/box1_hit.png',{ frameWidth:28, frameHeight : 24} )
+  this.load.image('boxPartTopLeft', 'src/assets/box/box1_upperLeft.png');
+  this.load.image('boxPartTopRight', 'src/assets/box/box1_upperRight.png');
+  this.load.image('boxPartBottomLeft', 'src/assets/box/box1_lowerLeft.png');
+  this.load.image('boxPartBottomRight', 'src/assets/box/box1_lowerRight.png');
 
 
   
@@ -77,11 +82,11 @@ preload() {
   this.load.spritesheet("flagWave","./src/assets/flag_Idle_Wave.png", {frameWidth: 64, frameHeight: 64});
   //FRUITS
   this.load.spritesheet('orange',"./src/assets/orange.png", {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('banana',"./src/assets/fruits/banana.png", {frameWidth: 32, frameHeight: 32});
   //FRUIT COLLECTED
   this.load.spritesheet('fruitCollected','./src/assets/fruit_Collected.png', {frameWidth: 32, frameHeight: 32});
   //MAP
   this.load.tilemapTiledJSON(this.level.mapName,this.level.mapData);
-  //
   this.load.image('spikeTrap','./src/assets/traps/spike_Trap.png');
  
   
@@ -114,7 +119,7 @@ create()
      immovable: true,
      allowGravity: false
 });
-
+  this.objects=this.physics.add.group();
 
   //MAP
   this.map = this.make.tilemap({ key: this.level.mapName });
@@ -128,7 +133,7 @@ create()
    //background
   this.tileBackground = this.add.tileSprite(0,0,this.map.widthInPixels*2,this.map.heightInPixels*2,"blueBackground");
 
-  const worldLayer = this.map.createDynamicLayer("World", tileset, 0, 0);
+  const worldLayer = this.map.createStaticLayer("World", tileset, 0, 0);
   //const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
   
 
@@ -161,6 +166,9 @@ create()
 
     //TRAPS
     loadTraps({context:this,map:this.map});
+
+    //objects
+    loadObjects({context:this,map:this.map});
     
 
   
@@ -263,6 +271,7 @@ this.anims.create({
 
 });
 
+//Fruits
 
 this.anims.create({
   key : "orangeAnim",
@@ -271,6 +280,12 @@ this.anims.create({
   repeat : 0
 });
 
+this.anims.create({
+  key : "bananaAnim",
+  frames: this.anims.generateFrameNumbers('banana', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
 
 this.anims.create({
   key : "fruitCollected",
@@ -328,6 +343,14 @@ this.anims.create({
 
 
 
+//Box
+
+this.anims.create({
+  key: 'box1HitAnim',
+  frames: this.anims.generateFrameNumbers('box1Hit', { start: 0, end: 2}),
+  frameRate: 20,
+  repeat: 0
+});
 
 
 
@@ -342,12 +365,14 @@ this.anims.create({
   //PLAYER
   this.physics.add.overlap(this.enemies, this.newPlayer, playerTouchEnemy, null, this);
   this.physics.add.collider(this.newPlayer, worldLayer);
+  this.physics.add.collider(this.newPlayer, this.objects, playerTouchBox, null, this);
   //ENEMIES
   this.physics.add.collider(this.enemies, worldLayer);
   this.physics.add.collider(this.enemies, this.enemies, enemyCollision, null, this);
   this.physics.add.collider(this.enemies,enemyCollisionLayer);
   //SHELL
   this.physics.add.collider(this.shells,worldLayer);
+  this.physics.add.collider(this.objects,this.shells, shellTouchedBox, null, this);
   this.physics.add.collider(this.shells, this.newPlayer, playerTouchShell, null, this);
   this.physics.add.overlap(this.shells,this.enemies, shellTouchEnemy,null, this);
   this.physics.add.collider(this.shells,this.shells,shellTouchShell,null,this);
@@ -365,6 +390,10 @@ this.anims.create({
   this.physics.add.overlap(this.newPlayer, this.fruits, fruitTouched, null, this);
  //TRAPS
  this.physics.add.overlap(this.newPlayer, this.traps, trapTouched, null, this);
+ //objects
+ this.physics.add.collider(this.objects, worldLayer);
+ this.physics.add.collider(this.objects, this.enemies, enemyCollision, null, this);
+
 
 
 

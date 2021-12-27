@@ -1,10 +1,12 @@
 import { EnemyPlant } from "./assets/enemyPlant.js";
-import { enemyTypes, mapObjectTypes, trapTypes } from "./constantEnums.js";
+import { enemyTypes, fruitTypes, mapObjectTypes, objectTypes, trapTypes } from "./constantEnums.js";
 import { MushRoomEnemy } from "./enemyMushroom.js";
 import { SnailEnemy } from "./enemySnail.js";
 import { Flag } from "./flag.js";
 import { Orange } from "./orange.js";
 import { SpikeTrap } from "./spikeTrap.js";
+import { Banana } from "./banana.js";
+import { Box, Box1 } from "./box.js";
 
 
 
@@ -42,13 +44,7 @@ export function loadEnemies(config)
       
     enemySpawnLocations.forEach(enemy => {
       
-        var enemyToAdd = addEnemyByType(enemy,config.context);
-
-        if (enemyToAdd)
-        {
-            config.context.enemies.add(enemyToAdd);
-        }
-        
+        addEnemyByType(enemy,config.context);
 
         });
 
@@ -65,22 +61,22 @@ export function addEnemyByType(enemy,scene)
         case enemyTypes.MUSHROOM_ENEMY:
             {   
                     
-                var newEnemy = new MushRoomEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
-                return newEnemy;   
+                new MushRoomEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                break;   
 
             }
 
         case enemyTypes.FLOWER_ENEMY:
             {
-                var newEnemy = new EnemyPlant({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
-                return newEnemy;
+                new EnemyPlant({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                break;
     
             }
 
             case enemyTypes.SNAIL_ENEMY:
             {
-                var newEnemy = new SnailEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
-                return newEnemy;
+                new SnailEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                break;
             }
         
     }
@@ -121,9 +117,7 @@ export function loadFlag(config)
       
     }
 
-    console.log(flagLocation);
     
-
 }
 
 export function loadFruits(config)
@@ -150,7 +144,23 @@ export function loadFruits(config)
     if (fruitLocations)
     {
         fruitLocations.forEach(fruit =>{
-            new Orange({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+            switch (fruit.type)
+            {
+                case fruitTypes.ORANGE:
+                    {
+                        console.log('new orange');
+                        new Orange({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }
+                case fruitTypes.BANANA:
+                    {
+                        console.log('new banana')
+                        new Banana({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }
+
+            }
+            
           });
       
 
@@ -182,7 +192,7 @@ export function loadTraps(config)
 
     if (trapLocations)
     {
-        console.log(trapLocations);
+       
 
         trapLocations.forEach(trap =>{
 
@@ -190,7 +200,7 @@ export function loadTraps(config)
 
             if (trapToAdd)
             {
-                console.log(trapToAdd);
+                
                 config.context.traps.add(trapToAdd);
 
             }
@@ -217,6 +227,62 @@ function addTrapByType(trap, scene)
 
 
     }
+
     
+}
+
+export function loadObjects(config)
+{
+    var objectLocations;
+
+    if (config.map.objects)
+    {
+
+        for (var i=0; i<config.map.objects.length;i++)
+        {
+            if (config.map.objects[i].name === mapObjectTypes.OBJECTS)
+            {
+                 //if exists 
+                 objectLocations = config.map.getObjectLayer('objects')['objects'];
+               
+            }
+
+        }     
+
+    }
+
+    if (objectLocations)
+    {
+
+        objectLocations.forEach(object =>{
+        addObjectByType(object, config.context);
+            
+        });
+      
+
+    }
+
+
+
+}
+
+function addObjectByType(object, scene)
+{
+   
+    if (object)
+    {
+        switch (object.type)
+        {
+            case objectTypes.BOX1 :
+                {
+                    new Box1({scene:scene,x:object.x+object.width/2,y:object.y-object.height/2});
+
+                }
+
+        }
+
+
+    }
+
 
 }

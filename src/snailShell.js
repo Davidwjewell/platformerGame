@@ -13,7 +13,7 @@ export class SnailEnemyShell extends Phaser.Physics.Arcade.Sprite
             //enemy type
             this.type=enemyTypes.SNAIL_ENEMY_SHELL;
             //movement speed       
-            this.speed=150;
+            this.speed=175;
             //DEFAULT MOVE LEFT
             this.directionMoving=config.directionFacing;
            //IF RIGHT FLIP X
@@ -92,12 +92,12 @@ export class SnailEnemyShell extends Phaser.Physics.Arcade.Sprite
                 this.flipX=true;
 
             }
-          //  this.anims.play('snailEnemyShellIdleAnim', true);
+   
 
         }
 
         //SHELL JUMPED ON (HIT FROM TOP) WHILE 
-        if (this.state === enemyStates.SHELL_HIT_TOP)
+        if (this.state === enemyStates.SHELL_HIT_SIDE)
         {
          
                 console.log(this.playHitAnimation);
@@ -116,7 +116,6 @@ export class SnailEnemyShell extends Phaser.Physics.Arcade.Sprite
 
         }
 
-
          //ENEMY DEATH
          if (this.state === enemyStates.DEATH)
          {   
@@ -125,36 +124,6 @@ export class SnailEnemyShell extends Phaser.Physics.Arcade.Sprite
              this.y+=5;
  
          }
-
-
-
-        /*
-        //ENEMY HIT
-        if (this.state === enemyStates.HIT && this.checkForHit)
-        {
-          
-            this.checkForHit=false;
-
-            if (this.playHitAnimation)
-            {
-                
-                this.playHitAnimation=false;
-                this.setVelocityX(0);
-
-                this.anims.play('mushroomEnemyHitAnim', false).once('animationcomplete', () =>{
-                this.body.setEnable(false);    
-                this.state = enemyStates.DEATH;                
-                });
-
-            }
-
-        }
-
-
-       
-    }
-
-*/
 
 }
 

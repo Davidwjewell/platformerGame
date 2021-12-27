@@ -1,9 +1,8 @@
-import { directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, projectileStates } from "./constantEnums";
+import { boxStates, directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, projectileStates } from "./constantEnums";
 import { checkRemainingFruit } from "./gameLogic";
 
 export function playerTouchShell(enemy,player)
 {
-console.log('touch shell');
   //If Type is snail shell
   if (enemy.type === enemyTypes.SNAIL_ENEMY_SHELL)  
   {
@@ -17,11 +16,13 @@ console.log('touch shell');
           if(enemy.state === enemyStates.SHELL_IDLE)
           {
               console.log('set state shell hit top');
-              enemy.state = enemyStates.SHELL_HIT_TOP;
+              enemy.state = enemyStates.SHELL_ACTIVE;
+         
           }
           //if shell is moving then set idle (stop moving)
-          if (enemy.state === enemyStates.SHELL_ACTIVE)
+          else if (enemy.state === enemyStates.SHELL_ACTIVE)
           {
+              console.log('set idle');
               enemy.setVelocity(0);
               enemy.state = enemyStates.SHELL_IDLE;
           }
@@ -85,6 +86,19 @@ export function shellTouchEnemy(shell,enemy)
 
 export function shellTouchShell(shell1,shell2)
 {
+  
+    if (shell1.state !== enemyStates.SHELL_HIT_SIDE)
+    {
+        shell1.state = enemyStates.SHELL_HIT_SIDE;
+
+    }
+
+    if (shell2.state !== enemyStates.SHELL_HIT_SIDE)
+    {
+        shell2.state = enemyStates.SHELL_HIT_SIDE;
+    }
+
+
 
 
 }
@@ -192,6 +206,20 @@ export function projectileTouchPlayer(player, projectile)
 
 }
 
+export function playerTouchBox(player, box)
+{
+    if (player.body.touching.up)
+    {
+        if (box.state !== boxStates.HIT)
+        {
+            box.state = boxStates.HIT;
+        }
+        
+    }
+
+
+}
+
 export function enemyProjectileCollision(projectile)
 {
     projectile.state = projectileStates.COLLLIDE;
@@ -203,4 +231,13 @@ export function trapTouched(player)
       //set player as dead
       player.death = true; 
 
+}
+
+export function shellTouchedBox(shell,box)
+{   
+   if (box.state !== boxStates.HIT)
+   {
+        box.state = boxStates.HIT;
+   }
+    
 }

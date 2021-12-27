@@ -63,7 +63,8 @@ export const mapObjectTypes={
     ENEMY: 'enemy',
     FLAG : 'flag',
     FRUIT : 'fruits',
-    TRAPS : 'traps'
+    TRAPS : 'traps',
+    OBJECTS : 'objects'
 }
 
 export const gameStates= {
@@ -73,4 +74,19 @@ export const gameStates= {
 
 export const trapTypes = {
     SPIKE_TRAP : "spike_Trap"
+};
+
+export const fruitTypes ={
+    ORANGE : "orange",
+    BANANA : "banana"
+};
+
+export const objectTypes={
+    BOX1 : 'box1'
+};
+
+export const boxStates={
+    HIT : "hit",
+    IDLE : "idle",
+    BROKEN : "broken"
 };
