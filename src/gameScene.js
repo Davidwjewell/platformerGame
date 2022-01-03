@@ -68,22 +68,22 @@ preload() {
   this.load.image('boxPartBottomRight', 'src/assets/box/box1_lowerRight.png');
 
 //Rock
-this.load.spritesheet('rockEnemy1Idle','/src/assets/rockEnemies/rockEnemy1_Idle.png',{frameWidth:38, frameHeight : 34});
-this.load.spritesheet('rockEnemy1Run','/src/assets/rockEnemies/rockEnemy1_Run.png',{frameWidth:38, frameHeight : 34});
-this.load.image('rockEnemy1Hit','/src/assets/rockEnemies/rockEnemy1_Hit.png');
+this.load.spritesheet('rockEnemy1Idle','src/assets/rockEnemies/rockEnemy1_Idle.png',{frameWidth:38, frameHeight : 34});
+this.load.spritesheet('rockEnemy1Run','src/assets/rockEnemies/rockEnemy1_Run.png',{frameWidth:38, frameHeight : 34});
+this.load.image('rockEnemy1Hit','src/assets/rockEnemies/rockEnemy1_Hit.png');
 //
-this.load.spritesheet('rockEnemy2Idle','/src/assets/rockEnemies/rockEnemy2_Idle.png',{frameWidth:32, frameHeight : 28});
-this.load.spritesheet('rockEnemy2Run','/src/assets/rockEnemies/rockEnemy2_Run.png',{frameWidth:32, frameHeight : 28});
-this.load.image('rockEnemy2Hit','/src/assets/rockEnemies/rockEnemy2_Hit.png');
+this.load.spritesheet('rockEnemy2Idle','src/assets/rockEnemies/rockEnemy2_Idle.png',{frameWidth:32, frameHeight : 28});
+this.load.spritesheet('rockEnemy2Run','src/assets/rockEnemies/rockEnemy2_Run.png',{frameWidth:32, frameHeight : 28});
+this.load.image('rockEnemy2Hit','src/assets/rockEnemies/rockEnemy2_Hit.png');
 //
-this.load.spritesheet('rockEnemy3Idle','/src/assets/rockEnemies/rockEnemy3_Idle.png',{frameWidth:22, frameHeight : 18});
-this.load.spritesheet('rockEnemy3Run','/src/assets/rockEnemies/rockEnemy3_Run.png',{frameWidth:22, frameHeight : 18});
-this.load.spritesheet('rockEnemy3Hit','/src/assets/rockEnemies/rockEnemy3_Hit.png', {frameWidth:22, frameHeight : 18});
+this.load.spritesheet('rockEnemy3Idle','src/assets/rockEnemies/rockEnemy3_Idle.png',{frameWidth:22, frameHeight : 18});
+this.load.spritesheet('rockEnemy3Run','src/assets/rockEnemies/rockEnemy3_Run.png',{frameWidth:22, frameHeight : 18});
+this.load.spritesheet('rockEnemy3Hit','src/assets/rockEnemies/rockEnemy3_Hit.png', {frameWidth:22, frameHeight : 18});
 //BEE ENEMY
-this.load.spritesheet('beeEnemyIdle','/src/assets/beeEnemy/beeEnemy_Idle.png',{frameWidth:36 , frameHeight : 34});
-this.load.spritesheet('beeEnemyHit','/src/assets/beeEnemy/beeEnemy_Hit.png',{frameWidth:36, frameHeight : 34});
-this.load.spritesheet('beeEnemyAttack','/src/assets/beeEnemy/beeEnemy_Attack.png',{frameWidth:36, frameHeight : 34});
-this.load.image('beeEnemyBullet','/src/assets/beeEnemy/beeEnemy_Bullet.png');
+this.load.spritesheet('beeEnemyIdle','src/assets/beeEnemy/beeEnemy_Idle.png',{frameWidth:36 , frameHeight : 34});
+this.load.spritesheet('beeEnemyHit','src/assets/beeEnemy/beeEnemy_Hit.png',{frameWidth:36, frameHeight : 34});
+this.load.spritesheet('beeEnemyAttack','src/assets/beeEnemy/beeEnemy_Attack.png',{frameWidth:36, frameHeight : 34});
+this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
   //BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
