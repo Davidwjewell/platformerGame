@@ -7,8 +7,30 @@ import { Orange } from "./orange.js";
 import { SpikeTrap } from "./spikeTrap.js";
 import { Banana } from "./banana.js";
 import { Box, Box1 } from "./box.js";
+import { SpikeBallTrap } from "./spikeBallTrap.js";
+import { SpikeBallChain } from "./spikeBallChain.js";
+import { RockEnemy1, RockEnemy2, RockEnemy3 } from "./rockEnemy.js";
+import { Apple } from "./apple.js";
+import { Player } from "./player.js";
+import { BeeEnemy } from "./beeEnemy.js";
 
 
+
+export function loadPlayer(config)
+{
+
+    var playerStartLocation;
+
+    if (config.map.objects)
+    {
+        playerStartLocation=config.map.getObjectLayer('player')['objects'][0];
+        if (playerStartLocation)
+        {
+            config.context.newPlayer = new Player({scene:config.context,x:playerStartLocation.x,y:playerStartLocation.y});
+        }
+        console.log(playerStartLocation);
+    }
+}
 
 
 export function loadEnemies(config)
@@ -78,6 +100,33 @@ export function addEnemyByType(enemy,scene)
                 new SnailEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
                 break;
             }
+            case enemyTypes.ROCK_ENEMY1:
+            {
+                console.log(enemy);
+                new RockEnemy1({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                break;
+                
+            }
+            case enemyTypes.ROCK_ENEMY2:
+                {
+                   // console.log(enemy);
+                    new RockEnemy2({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+                    
+                }
+            case enemyTypes.ROCK_ENEMY3:
+                {
+                    //console.log(enemy);
+                    new RockEnemy3({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+                        
+                }
+            case enemyTypes.BEE_ENEMY:
+                {
+                    new BeeEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+                }
+            
         
     }
 
@@ -148,16 +197,22 @@ export function loadFruits(config)
             {
                 case fruitTypes.ORANGE:
                     {
-                        console.log('new orange');
+                       // console.log('new orange');
                         new Orange({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
                         break;
                     }
                 case fruitTypes.BANANA:
                     {
-                        console.log('new banana')
+                       // console.log('new banana')
                         new Banana({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
                         break;
                     }
+                    case fruitTypes.APPLE:
+                        {
+                            console.log('new apple')
+                            new Apple({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                            break;
+                        }    
 
             }
             
@@ -185,6 +240,8 @@ export function loadTraps(config)
                
             }
 
+         
+
         }     
 
     }
@@ -196,15 +253,10 @@ export function loadTraps(config)
 
         trapLocations.forEach(trap =>{
 
-            var trapToAdd=addTrapByType(trap, config.context);
+            addTrapByType(trap, config.context);
 
-            if (trapToAdd)
-            {
-                
-                config.context.traps.add(trapToAdd);
-
-            }
-          });
+    
+        });
       
 
     }
@@ -221,8 +273,33 @@ function addTrapByType(trap, scene)
         case trapTypes.SPIKE_TRAP:
             {   
                     
-                return new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2});
+                new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2});
+                break;
             }
+
+        case trapTypes.SPIKED_BALL:
+        {
+            //console.log(trap);
+            var angle=trap.properties[0].value;
+            var centerX=trap.properties[1].value;
+            var centerY=trap.properties[2].value;
+            var distToCenter=trap.properties[3].value;
+            new SpikeBallTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2,angle:angle,centerX:centerX,centerY:centerY,distToCenter:distToCenter});
+            break;
+
+        }   
+        case trapTypes.SPIKED_BALL_CHAIN:
+        {
+            //console.log(trap);
+           // console.log('chain link');
+            var angle=trap.properties[0].value;
+            var centerX=trap.properties[1].value;
+            var centerY=trap.properties[2].value;
+            var distToCenter=trap.properties[3].value;
+
+            new SpikeBallChain({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2,angle:angle,centerX:centerX,centerY:centerY,distToCenter:distToCenter});
+            break;
+        } 
 
 
 

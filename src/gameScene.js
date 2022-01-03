@@ -1,7 +1,7 @@
 
 import {Player} from "./player.js";
 import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox} from "./collisions.js";
-import { loadEnemies, loadFlag, loadFruits, loadObjects, loadTraps } from "./loadfunctions.js";
+import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlayer, loadTraps } from "./loadfunctions.js";
 import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
@@ -23,7 +23,7 @@ export class GameScene extends Phaser.Scene{
   {
     //load first level
     //this.level=levels.LEVEL_1;
-    this.level=levels.LEVEL_2;
+    this.level=levels.LEVEL_3;
   }
   
 else
@@ -67,9 +67,23 @@ preload() {
   this.load.image('boxPartBottomLeft', 'src/assets/box/box1_lowerLeft.png');
   this.load.image('boxPartBottomRight', 'src/assets/box/box1_lowerRight.png');
 
-
-  
-
+//Rock
+this.load.spritesheet('rockEnemy1Idle','/src/assets/rockEnemies/rockEnemy1_Idle.png',{frameWidth:38, frameHeight : 34});
+this.load.spritesheet('rockEnemy1Run','/src/assets/rockEnemies/rockEnemy1_Run.png',{frameWidth:38, frameHeight : 34});
+this.load.image('rockEnemy1Hit','/src/assets/rockEnemies/rockEnemy1_Hit.png');
+//
+this.load.spritesheet('rockEnemy2Idle','/src/assets/rockEnemies/rockEnemy2_Idle.png',{frameWidth:32, frameHeight : 28});
+this.load.spritesheet('rockEnemy2Run','/src/assets/rockEnemies/rockEnemy2_Run.png',{frameWidth:32, frameHeight : 28});
+this.load.image('rockEnemy2Hit','/src/assets/rockEnemies/rockEnemy2_Hit.png');
+//
+this.load.spritesheet('rockEnemy3Idle','/src/assets/rockEnemies/rockEnemy3_Idle.png',{frameWidth:22, frameHeight : 18});
+this.load.spritesheet('rockEnemy3Run','/src/assets/rockEnemies/rockEnemy3_Run.png',{frameWidth:22, frameHeight : 18});
+this.load.spritesheet('rockEnemy3Hit','/src/assets/rockEnemies/rockEnemy3_Hit.png', {frameWidth:22, frameHeight : 18});
+//BEE ENEMY
+this.load.spritesheet('beeEnemyIdle','/src/assets/beeEnemy/beeEnemy_Idle.png',{frameWidth:36 , frameHeight : 34});
+this.load.spritesheet('beeEnemyHit','/src/assets/beeEnemy/beeEnemy_Hit.png',{frameWidth:36, frameHeight : 34});
+this.load.spritesheet('beeEnemyAttack','/src/assets/beeEnemy/beeEnemy_Attack.png',{frameWidth:36, frameHeight : 34});
+this.load.image('beeEnemyBullet','/src/assets/beeEnemy/beeEnemy_Bullet.png');
   //BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
@@ -83,11 +97,15 @@ preload() {
   //FRUITS
   this.load.spritesheet('orange',"./src/assets/orange.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('banana',"./src/assets/fruits/banana.png", {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('apple',"./src/assets/fruits/apple.png", {frameWidth: 32, frameHeight: 32});
   //FRUIT COLLECTED
   this.load.spritesheet('fruitCollected','./src/assets/fruit_Collected.png', {frameWidth: 32, frameHeight: 32});
   //MAP
   this.load.tilemapTiledJSON(this.level.mapName,this.level.mapData);
+  //TRAPS
   this.load.image('spikeTrap','./src/assets/traps/spike_Trap.png');
+  this.load.image('spikeBallTrap','./src/assets/traps/spiked_Ball_Trap.png');
+  this.load.image('spikeBallChain','./src/assets/traps/spiked_Ball_Chain.png');
  
   
 
@@ -152,6 +170,10 @@ create()
   //gameState
 
   this.gameState=gameStates.RUN;
+
+  //player
+
+  loadPlayer({context:this,map:this.map});
  
 
   //ENEMIES
@@ -288,6 +310,16 @@ this.anims.create({
 });
 
 this.anims.create({
+  key : "appleAnim",
+  frames: this.anims.generateFrameNumbers('apple', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
+
+
+
+
+this.anims.create({
   key : "fruitCollected",
   frames: this.anims.generateFrameNumbers('fruitCollected', {start : 0, end :5}),
   frameRate : 20,
@@ -352,18 +384,96 @@ this.anims.create({
   repeat: 0
 });
 
+//Rock enemy 1
+this.anims.create({
+  key: 'rockEnemy1IdleAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy1Idle', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
+this.anims.create({
+  key: 'rockEnemy1RunAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy1Run', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
+
+
+//Rock enemy 1
+this.anims.create({
+  key: 'rockEnemy2IdleAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy2Idle', { start: 0, end: 12}),
+  frameRate: 20,
+  repeat: 0
+});
+this.anims.create({
+  key: 'rockEnemy2RunAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy2Run', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
+//rock enemy 3
+this.anims.create({
+  key: 'rockEnemy3IdleAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy3Idle', { start: 0, end: 10}),
+  frameRate: 20,
+  repeat: 0
+});
+this.anims.create({
+  key: 'rockEnemy3RunAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy3Run', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
+this.anims.create({
+  key: 'rockEnemy3HitAnim',
+  frames: this.anims.generateFrameNumbers('rockEnemy3Hit', { start: 0, end: 4}),
+  frameRate: 20,
+  repeat: 0
+});
+
+//BEE ENEMY
+
+this.anims.create({
+  key: 'beeEnemyIdleAnim',
+  frames: this.anims.generateFrameNumbers('beeEnemyIdle', { start: 0, end: 5}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'beeEnemyAttackAnim',
+  frames: this.anims.generateFrameNumbers('beeEnemyAttack', { start: 0, end: 7}),
+  frameRate: 20,
+  repeat: 0
+});
+this.anims.create({
+  key: 'beeEnemyHitAnim',
+  frames: this.anims.generateFrameNumbers('beeEnemyHit', { start: 0, end: 4}),
+  frameRate: 20,
+  repeat: 0
+});
+
+
+
+
+
+
+
+
+
 
 
 
 // PLAYER
-  this.newPlayer = new Player({scene:this,x:100,y:100});
+  //this.newPlayer = new Player({scene:this,x:100,y:100});
 
 
   //COLLIDERS
   //physics group
  
   //PLAYER
-  this.physics.add.overlap(this.enemies, this.newPlayer, playerTouchEnemy, null, this);
+  this.physics.add.collider(this.enemies, this.newPlayer, playerTouchEnemy, null, this);
   this.physics.add.collider(this.newPlayer, worldLayer);
   this.physics.add.collider(this.newPlayer, this.objects, playerTouchBox, null, this);
   //ENEMIES
@@ -438,7 +548,9 @@ update(time)
    
 
   //TEST STATE TO RAISE FLAG
-  if (this.newFlag.active && this.newFlag)
+  if (this.newFlag)
+  {
+  if (this.newFlag.active)
    {
    if (time > 5000 && this.newFlag.state !== flagStates.ACTIVE)
      {
@@ -448,7 +560,7 @@ update(time)
     }
       
 }
-
+}
 
 }
 

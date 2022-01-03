@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="100" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="131">
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="100" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="133">
  <editorsettings>
-  <export target="level_2.json" format="json"/>
+  <export target="." format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="platformer_Assets" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="Terrain (16x16).png" width="352" height="176"/>
@@ -1267,6 +1267,7 @@
   <object id="119" type="box1" gid="315" x="1143.5" y="178.5" width="28" height="24"/>
   <object id="126" type="box1" gid="315" x="1169.5" y="245.5" width="28" height="24"/>
   <object id="127" type="box1" gid="315" x="1266" y="245" width="28" height="24"/>
+  <object id="131" type="box1" gid="315" x="930.5" y="228" width="28" height="24"/>
  </objectgroup>
  <objectgroup id="15" name="traps">
   <object id="98" type="spike_Trap" gid="316" x="464" y="368" width="16" height="16"/>
@@ -1308,6 +1309,11 @@
   <object id="128" type="banana" gid="288" x="1161" y="337.5" width="32" height="32"/>
   <object id="129" type="banana" gid="288" x="1236" y="336.5" width="32" height="32"/>
   <object id="130" type="banana" gid="288" x="1313.5" y="336.5" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="16" name="player">
+  <object id="132" x="55" y="94">
+   <point/>
+  </object>
  </objectgroup>
  <layer id="5" name="enemyColliders" width="100" height="24">
   <data encoding="base64">

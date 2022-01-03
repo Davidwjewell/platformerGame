@@ -35,7 +35,7 @@ export class Fruit extends Phaser.Physics.Arcade.Sprite
         if (this.state === fruitStates.DISABLED)
         {
             this.destroy();
-            checkRemainingFruit(config.scene);
+            //checkRemainingFruit(config.scene);
         }
 
 

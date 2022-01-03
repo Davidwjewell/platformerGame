@@ -134,6 +134,7 @@ export function playerTouchEnemy(enemy,player)
          else
  
          {
+             console.log(enemy);
              console.log('death');
              player.death = true;
  
@@ -228,6 +229,7 @@ export function enemyProjectileCollision(projectile)
 
 export function trapTouched(player)
 {
+    console.log('trap');
       //set player as dead
       player.death = true; 
 
