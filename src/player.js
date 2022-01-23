@@ -1,4 +1,5 @@
-import { playerTouchEnemy } from "./collisions";
+import { playerTouchBox, playerTouchEnemy } from "./collisions";
+import { gameStates } from "./constantEnums";
 
 export class Player extends Phaser.Physics.Arcade.Sprite
 {
@@ -9,7 +10,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.jumping=false;
         this.speed=100;
         this.jumpingSpeed=425;
-        this.doubleJumpingVelocity=300; //half of jumping velocity
+        this.doubleJumpingVelocity=350; //half of jumping velocity
         this.doubleJumping=false;
         this.canDoubleJump=false;
         this.haveDoubleJumped=false;
@@ -38,6 +39,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
       {
         var canJump = this.body.blocked.down;
 
+
         // if touching floor
         if (canJump)
         {
@@ -51,7 +53,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         //if character jumping
         if (this.jumping)       
         {
+/*
+          var blockedLeft=this.body.blocked.left;
+          var blockedRight=this.body.blocked.right;
 
+          
+          if (blockedLeft)
+          {
+            console.log('block left');
+            this.jumping=false;
+            this.setTexture('frogWallJump');
+
+
+          }
+*/
       //set texture to jumping
         if (this.jumping && !this.doubleJumping)
         {
@@ -61,19 +76,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
           //up released can double jump
           if (!config.scene.cursors.up.isDown && !this.haveDoubleJumped)
           {
-            if (this.body.velocity.y>this.veloctyYDoubleJumpMin) //&& this.body.velocity.y<this.veloctyYDoubleJumpMax)
-            {
-              //console.log('can dbl jump');
               this.canDoubleJump=true;                    
-            }
-          else
-          {
-            this.canDoubleJump=false;
           }
-  
+     
         }
 
-      }
+    //  }
         
         if (this.canDoubleJump && !this.doubleJumping)
         {
@@ -148,7 +156,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
          {
           this.body.setEnable(false);
           this.playDeathAnimation=false;
-          this.anims.play('frogDeathAnim', false);
+          this.anims.play('frogDeathAnim', false).once('animationcomplete', ()=>{
+            config.scene.gameState=gameStates.PLAYER_DEATH;
+          });
 
          }
           
@@ -157,8 +167,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
       
     }
     
+  }
 
 
+  
 
-    }
 

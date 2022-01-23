@@ -13,6 +13,8 @@ import { RockEnemy1, RockEnemy2, RockEnemy3 } from "./rockEnemy.js";
 import { Apple } from "./apple.js";
 import { Player } from "./player.js";
 import { BeeEnemy } from "./beeEnemy.js";
+import { Strawberry } from "./strawberry.js";
+import { RadishEnemy } from "./radishEnemy.js";
 
 
 
@@ -126,6 +128,13 @@ export function addEnemyByType(enemy,scene)
                     new BeeEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
                     break;
                 }
+            case enemyTypes.RADISH_ENEMY:
+                {
+                    new RadishEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+                }
+    
+
             
         
     }
@@ -208,11 +217,17 @@ export function loadFruits(config)
                         break;
                     }
                     case fruitTypes.APPLE:
+                    {
+                        //console.log('new apple')
+                        new Apple({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }    
+                        case fruitTypes.STRAWBERRY:
                         {
-                            console.log('new apple')
-                            new Apple({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                            //console.log('new strawberry')
+                            new Strawberry({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
                             break;
-                        }    
+                        }       
 
             }
             

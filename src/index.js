@@ -1,5 +1,8 @@
 import Phaser from "phaser";
+import { levels } from "./constantEnums.js";
 import { GameScene } from "./gameScene.js";
+import { LevelEndScene } from "./levelEndScene.js";
+import { LevelIntroScene } from "./levelIntroScene.js";
 
 
 
@@ -14,17 +17,14 @@ const config = {
   physics: {
     default : 'arcade',
     arcade: {
-    gravity: {y: 1000},
+    gravity: {y: 1200},
     debug: false
     },
   },
-  scene: [GameScene]//{
-    //init : init, 
-    //preload: preload,
-    //create: create,
-    //update:update
-  //}
+  scene: [LevelIntroScene,GameScene,LevelEndScene]
 };
 
-
 const game = new Phaser.Game(config);
+
+game.level=levels.LEVEL_3; //FIRST LEVEL
+

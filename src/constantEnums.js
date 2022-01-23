@@ -16,6 +16,8 @@ export const enemyStates={
     SHELL_ACTIVE : "Shell_Active", //Shell Moving
     SHELL_HIT_SIDE : "Shell_Hit_Side", // SHELL Side collision
     SHELL_HIT_TOP : "Shell_Hit_Top", //shell hit from top (Jumped on)
+    RADISH_AIR : "Radish_Air", //radish enemy airborne
+    RADISH_GROUND : "Radish enemy ground", //radish enemy ground
     DEATH : "Death",     //Death
     SPAWN : "Spawn",     //Rock enemy spawn new enemies once hit
     HIT_STATE: "Hit_State" // rock enemy state used to show sprite
@@ -47,27 +49,43 @@ export const enemyTypes={
     ROCK_ENEMY1:"rock_enemy_1",
     ROCK_ENEMY2:"rock_enemy_2",
     ROCK_ENEMY3:"rock_enemy_3",
-    BEE_ENEMY:"bee_Enemy"
+    BEE_ENEMY:"bee_Enemy",
+    RADISH_ENEMY:"radish_Enemy"
 }
 
 export const levels={
     LEVEL_1:{
-        name: 'Level 1',
+        name: 'Mad Mushrooms',
+        type : 'Level',
         mapName : 'level1Map',
         mapData : 'src/assets/level_1.json',
         next : 'LEVEL_2'
     },
     LEVEL_2:{
-        name : 'Level 2',
+        name : 'Kicking Snails',
+        type : 'Level',
         mapName : 'level2Map',
         mapData : 'src/assets/level_2.json',
         next : 'LEVEL_3'
     },
     LEVEL_3:{
-        name : 'Level 3',
+        name : 'Spike Ball Hell',
+        type : 'Level',
         mapName : 'level3Map',
         mapData : 'src/assets/level_3.json',
+        next : 'LEVEL_END'
+    },
+    LEVEL_4:{
+        name : 'Level 4',
+        type : 'Level',
+        mapName : 'level4Map',
+        mapData : 'src/assets/level_4.json',
         next : 'LEVEL_1'
+    },
+    LEVEL_END:
+    {
+        name: 'Level End',
+        type: 'end_Screen'
     }
 }
 
@@ -83,7 +101,8 @@ export const mapObjectTypes={
 
 export const gameStates= {
     RUN: 'run',
-    STOP : 'stop'
+    STOP : 'stop',
+    PLAYER_DEATH: 'player_Death'
 };
 
 export const trapTypes = {
@@ -95,7 +114,8 @@ export const trapTypes = {
 export const fruitTypes ={
     ORANGE : "orange",
     BANANA : "banana",
-    APPLE : "apple"
+    APPLE : "apple",
+    STRAWBERRY : "strawberry"
 };
 
 export const objectTypes={

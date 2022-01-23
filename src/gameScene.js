@@ -9,16 +9,27 @@ import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
 export class GameScene extends Phaser.Scene{
-    constructor(config)
+    constructor()
     {
         super({key : 'GameScene'});
+        {
+         // this.gameState=gameStates.RUN;
+        }
+       
 
     }
 
+    init()
+    {
+      
+      this.level=this.game.level;
+      console.log(this.level);
+      //levels[levelToLoad]
+    }
+/*
     init(levelToLoad)
 {
    
-
   if (Object.entries(levelToLoad).length === 0)
   {
     //load first level
@@ -30,9 +41,9 @@ else
 {
   this.level=levels[levelToLoad];
 }
-
-
 }
+*/
+
 preload() {
 
  
@@ -84,6 +95,11 @@ this.load.spritesheet('beeEnemyIdle','src/assets/beeEnemy/beeEnemy_Idle.png',{fr
 this.load.spritesheet('beeEnemyHit','src/assets/beeEnemy/beeEnemy_Hit.png',{frameWidth:36, frameHeight : 34});
 this.load.spritesheet('beeEnemyAttack','src/assets/beeEnemy/beeEnemy_Attack.png',{frameWidth:36, frameHeight : 34});
 this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
+//RADISH ENEMY
+this.load.spritesheet('radishEnemyAir','src/assets/radishEnemy/radishEnemy_Air.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyHit','src/assets/radishEnemy/radishEnemy_Hit.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyIdleGround','src/assets/radishEnemy/radishEnemy_Idle_Ground.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyRun','src/assets/radishEnemy/radishEnemy_Run.png',{frameWidth:30 , frameHeight : 38});
   //BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
@@ -98,6 +114,7 @@ this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
   this.load.spritesheet('orange',"./src/assets/orange.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('banana',"./src/assets/fruits/banana.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('apple',"./src/assets/fruits/apple.png", {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('strawberry',"./src/assets/fruits/strawberry.png", {frameWidth: 32, frameHeight: 32});
   //FRUIT COLLECTED
   this.load.spritesheet('fruitCollected','./src/assets/fruit_Collected.png', {frameWidth: 32, frameHeight: 32});
   //MAP
@@ -115,12 +132,7 @@ this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
 create()
 {
 
-  
-  
-  let { width, height } = this.sys.game.canvas;
 
-
-  
 //INPUT
   this.cursors = this.input.keyboard.createCursorKeys();
   //PHYSICS GROUPS
@@ -316,6 +328,14 @@ this.anims.create({
   repeat : 0
 });
 
+this.anims.create({
+  key : "strawberryAnim",
+  frames: this.anims.generateFrameNumbers('strawberry', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
+
+
 
 
 
@@ -455,7 +475,33 @@ this.anims.create({
 });
 
 
+this.anims.create({
+  key: 'radishEnemyAirAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyAir', { start: 0, end: 5}),
+  frameRate: 20,
+  repeat: 0
+});
 
+this.anims.create({
+  key: 'radishEnemyHitAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyHit', { start: 0, end: 4}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'radishEnemyIdleGroundAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyIdleGround', { start: 0, end: 8}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'radishEnemyRunAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyRun', { start: 0, end: 11}),
+  frameRate: 20,
+  repeat: 0
+});
 
 
 
@@ -515,14 +561,13 @@ this.anims.create({
   this.cameras.main.startFollow(this.newPlayer, true);
 
 
-
-
+  //this.cameras.main.fadeIn(2000, 0, 0, 0);
+  
 }
 
 
 update(time)
 {
-
   //GAMESTATE RUN
   if (this.gameState=== gameStates.RUN)
   {
@@ -536,14 +581,18 @@ update(time)
     });
 
   }
-  //GAMESTATE STOP - LEVEL FINISHED
 
+  //GAMESTATE - PLAYER DIED
+  if (this.gameState === gameStates.PLAYER_DEATH)
+  {
+    this.scene.stop(); 
+    this.scene.start('LevelIntroScene'); 
+  }
+  //GAMESTATE STOP - LEVEL FINISHED
   if (this.gameState === gameStates.STOP)
   {
-    this.scene.stop();         
-    console.log(this.level.next);
-    this.scene.start('GameScene',this.level.next); 
-
+    this.scene.stop();
+    this.loadNextLevel();
   }
    
 
@@ -560,6 +609,23 @@ update(time)
     }
       
 }
+}
+
+loadNextLevel()
+{
+   console.log('level finished');
+
+    this.game.level=levels[this.level.next];
+    console.log(this.game.level);
+    if (this.game.level.type==='Level')
+    {
+      this.scene.start('LevelIntroScene'); 
+    }
+    if (this.game.level.type==='end_Screen')
+    {
+      this.scene.start('LevelEndScene');
+    }
+    
 }
 
 }
