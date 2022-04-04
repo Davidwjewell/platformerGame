@@ -212,7 +212,7 @@ this.anims.create({
   key: 'frogIdleAnim',
   frames: this.anims.generateFrameNumbers('frogIdle', { start: 0, end: 10 }),
   frameRate: 20,
-  repeat: -1
+  repeat: 0
 
 });
 
@@ -220,7 +220,7 @@ this.anims.create({
   key: 'frogRunAnim',
   frames: this.anims.generateFrameNumbers('frogRun', { start: 0, end: 11 }),
   frameRate: 20,
-  repeat: -1
+  repeat: 0
 
 });
 
@@ -234,7 +234,7 @@ this.anims.create({
 this.anims.create({
   key: 'frogWallJumpAnim',
   frames: this.anims.generateFrameNumbers('frogWallJump', { start: 0, end: 4}),
-  frameRate: 20,
+  frameRate: 50,
   repeat: 0
 });
 
@@ -574,7 +574,7 @@ update(time)
     this.tileBackground.tilePositionY-=0.5;
 
 
-    this.newPlayer.update({scene:this});
+    this.newPlayer.update({time : time, scene:this});
    
      this.gameObjects.getChildren().forEach((enemy)=>{
      enemy.update({time: time,scene:this});
