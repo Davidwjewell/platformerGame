@@ -75,14 +75,14 @@ export const levels={
         type : 'Level',
         mapName : 'level3Map',
         mapData : 'src/assets/level_3.json',
-        next : 'LEVEL_END'
+        next : 'LEVEL_4'
     },
     LEVEL_4:{
-        name : 'Level 4',
+        name : 'Spring Heaven',
         type : 'Level',
         mapName : 'level4Map',
         mapData : 'src/assets/level_4.json',
-        next : 'LEVEL_5'
+        next : 'LEVEL_END'
     },
     LEVEL_5:{
         name : 'Level 5',
