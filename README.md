@@ -1,3 +1,16 @@
+
+Platform game made using Phaser.
+
+4\6 Levels completed.
+
+Play the latest version at:
+
+http://davidjewellgames.com/platformerGameDev/
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
 # Phaser 3 Webpack Project Template
 
 A Phaser 3 project template with ES6 support via [Babel 7](https://babeljs.io/) and [Webpack 4](https://webpack.js.org/)
