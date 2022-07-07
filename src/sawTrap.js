@@ -33,6 +33,8 @@ export class SawTrap extends Trap
                 this.speed=properties[i].value;
             }
 
+            
+
         }
 
     }
