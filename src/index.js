@@ -27,5 +27,5 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-game.level=levels.LEVEL_4; //FIRST LEVEL
+game.level=levels.LEVEL_1; //FIRST LEVEL
 
