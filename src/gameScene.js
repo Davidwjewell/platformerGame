@@ -1,6 +1,6 @@
 
 import {Player} from "./player.js";
-import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox} from "./collisions.js";
+import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox, playerTouchSpring} from "./collisions.js";
 import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlayer, loadTraps } from "./loadfunctions.js";
 import { flagStates, gameStates, levels } from "./constantEnums.js";
 
@@ -100,7 +100,13 @@ this.load.spritesheet('radishEnemyAir','src/assets/radishEnemy/radishEnemy_Air.p
 this.load.spritesheet('radishEnemyHit','src/assets/radishEnemy/radishEnemy_Hit.png',{frameWidth:30 , frameHeight : 38});
 this.load.spritesheet('radishEnemyIdleGround','src/assets/radishEnemy/radishEnemy_Idle_Ground.png',{frameWidth:30 , frameHeight : 38});
 this.load.spritesheet('radishEnemyRun','src/assets/radishEnemy/radishEnemy_Run.png',{frameWidth:30 , frameHeight : 38});
-  //BACKGROUNDS
+//TRUNK ENEMY
+this.load.spritesheet('trunkEnemyIdle','src/assets/trunkEnemy/trunkEnemyIdle.png', {frameWidth: 64, frameHeight:32}); 
+this.load.spritesheet('trunkEnemyRun','src/assets/trunkEnemy/trunkEnemyRun.png', {frameWidth: 64, frameHeight:32}); 
+this.load.spritesheet('trunkEnemyAttack','src/assets/trunkEnemy/trunkEnemyAttack.png', {frameWidth: 64, frameHeight:32});
+this.load.spritesheet('trunkEnemyHit','src/assets/trunkEnemy/trunkEnemyHit.png', {frameWidth: 64, frameHeight:32});
+this.load.image('trunkEnemyProjectile','src/assets/trunkEnemy/trunkEnemyProjectile.png');
+//BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
   this.load.image("tiles", "./src/assets/tileset_Extruded.png");
@@ -121,18 +127,22 @@ this.load.spritesheet('radishEnemyRun','src/assets/radishEnemy/radishEnemy_Run.p
   this.load.tilemapTiledJSON(this.level.mapName,this.level.mapData);
   //TRAPS
   this.load.image('spikeTrap','./src/assets/traps/spike_Trap.png');
+  this.load.image('spikeTrapRight','./src/assets/traps/spike_Trap_Right.png');
+  this.load.image('spikeTrapLeft','./src/assets/traps/spike_Trap_Left.png');
   this.load.image('spikeBallTrap','./src/assets/traps/spiked_Ball_Trap.png');
   this.load.image('spikeBallChain','./src/assets/traps/spiked_Ball_Chain.png');
- 
-  
-
+  //SAW TRAP
+  this.load.image('sawTrap','./src/assets/traps/saw_Trap_Off.png');
+  this.load.image('sawTrapChain','./src/assets/traps/saw_Trap_chain.png');
+  this.load.spritesheet('sawTrapRun','./src/assets/traps/saw_Trap_Run.png',{frameWidth: 38, frameHeight: 38});
+ //SPRING
+ this.load.image('springIdle','./src/assets/spring/spring_Idle.png');
+ this.load.spritesheet('springJump','./src/assets/spring/spring_Jump.png',{frameWidth: 28, frameHeight: 28});
 }
 
 
 create()
 {
-
-
 //INPUT
   this.cursors = this.input.keyboard.createCursorKeys();
   //PHYSICS GROUPS
@@ -151,23 +161,24 @@ create()
 });
   this.objects=this.physics.add.group();
 
+  this.springs=this.physics.add.group();
+
   //MAP
   this.map = this.make.tilemap({ key: this.level.mapName });
 
    //LAYERS
 
-   
 
   const tileset = this.map.addTilesetImage("platformer_Assets","tiles",16,16,1,2);
-
    //background
   this.tileBackground = this.add.tileSprite(0,0,this.map.widthInPixels*2,this.map.heightInPixels*2,"blueBackground");
 
-  const worldLayer = this.map.createStaticLayer("World", tileset, 0, 0);
+  const worldLayer = this.map.createLayer("World", tileset, 0, 0);
+  worldLayer.setDepth(1);
   //const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
   
 
-  const enemyCollisionLayer = this.map.createStaticLayer("enemyColliders",tileset,0,0);
+  const enemyCollisionLayer = this.map.createLayer("enemyColliders",tileset,0,0);
   enemyCollisionLayer.setVisible(false);
 
  //COLLISIONS LAYERS
@@ -503,16 +514,53 @@ this.anims.create({
   repeat: 0
 });
 
+//Trunk enemy
 
+this.anims.create({ 
+  key: 'trunkEnemyRunAnim',
+  frames: this.anims.generateFrameNumbers('trunkEnemyRun', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
 
+  this.anims.create({ 
+    key: 'trunkEnemyIdleAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyIdle', { start: 0, end: 17}),
+    frameRate: 20,
+    repeat: 0
+  });
 
+  this.anims.create({ 
+    key: 'trunkEnemyAttackAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyAttack', { start: 0, end: 10}),
+    frameRate: 20,
+    repeat: 0
+  });
+  
+  this.anims.create({ 
+    key: 'trunkEnemyHitAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat: 0});
+  
+    this.anims.create({ 
+      key: 'sawTrapRunAnim',
+      frames: this.anims.generateFrameNumbers('sawTrapRun', { start: 0, end: 7}),
+      frameRate: 20,
+      repeat: 0});
+    
+             
+  
+    
 
+//SPRING
 
-
-
-
-// PLAYER
-  //this.newPlayer = new Player({scene:this,x:100,y:100});
+this.anims.create({
+  key: 'springJumpAnim',
+  frames: this.anims.generateFrameNumbers('springJump', { start: 0, end: 7}),
+  frameRate: 20,
+  repeat: 0
+});
 
 
   //COLLIDERS
@@ -549,9 +597,10 @@ this.anims.create({
  //objects
  this.physics.add.collider(this.objects, worldLayer);
  this.physics.add.collider(this.objects, this.enemies, enemyCollision, null, this);
-
-
-
+//springs
+this.physics.add.collider(this.springs, worldLayer);
+this.physics.add.collider(this.springs, this.enemies, enemyCollision, null, this);
+this.physics.add.collider(this.newPlayer, this.springs, playerTouchSpring, null, this);
 
   
   //CAMERA

@@ -15,6 +15,11 @@ import { Player } from "./player.js";
 import { BeeEnemy } from "./beeEnemy.js";
 import { Strawberry } from "./strawberry.js";
 import { RadishEnemy } from "./radishEnemy.js";
+import { Spring } from "./spring.js";
+import { TrunkEnemy } from "./trunkEnemy.js";
+import { SpikeTrapLeft } from "./spikeTrapLeft.js";
+import { SpikeTrapRight } from "./spikeTrapRight.js";
+import { SawTrap } from "./sawTrap.js";
 
 
 
@@ -30,7 +35,7 @@ export function loadPlayer(config)
         {
             config.context.newPlayer = new Player({scene:config.context,x:playerStartLocation.x,y:playerStartLocation.y});
         }
-        console.log(playerStartLocation);
+       // console.log(playerStartLocation);
     }
 }
 
@@ -133,6 +138,11 @@ export function addEnemyByType(enemy,scene)
                     new RadishEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
                     break;
                 }
+              case enemyTypes.TRUNK_ENEMY:
+              {
+                  new TrunkEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                  break;
+              }  
     
 
             
@@ -251,12 +261,8 @@ export function loadTraps(config)
             if (config.map.objects[i].name === mapObjectTypes.TRAPS)
             {
                  //if exists 
-                 trapLocations = config.map.getObjectLayer('traps')['objects'];
-               
+                 trapLocations = config.map.getObjectLayer('traps')['objects'];     
             }
-
-         
-
         }     
 
     }
@@ -288,9 +294,28 @@ function addTrapByType(trap, scene)
         case trapTypes.SPIKE_TRAP:
             {   
                     
-                new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2});
+                new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
                 break;
             }
+            case trapTypes.SPIKE_TRAP_LEFT:
+            {   
+                    
+                new SpikeTrapLeft({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
+                break;
+            }
+            case trapTypes.SPIKE_TRAP_RIGHT:
+            {   
+                    
+                new SpikeTrapRight({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
+                break;
+            }
+            case trapTypes.SAW_TRAP:
+                {   
+                    console.log(trap);    
+                    new SawTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, properties : trap.properties});
+                    break;
+                }
+
 
         case trapTypes.SPIKED_BALL:
         {
@@ -368,8 +393,14 @@ function addObjectByType(object, scene)
             case objectTypes.BOX1 :
                 {
                     new Box1({scene:scene,x:object.x+object.width/2,y:object.y-object.height/2});
-
+                    break;
                 }
+            case objectTypes.SPRING :
+            {
+                console.log(object);
+                new Spring({scene:scene,x:object.x+object.width/2,y:object.y-11});    
+                break;
+            }    
 
         }
 

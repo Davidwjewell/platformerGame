@@ -22,6 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.canWallJump=true;
         this.haveWallJumped=false;
         this.haveWallJumpedTime=0;
+        this.onSpring=false;
         this.playDeathAnimation=true;
         this.veloctyYDoubleJumpMin=-50;
         this.veloctyYDoubleJumpMax=500;
@@ -30,8 +31,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         config.scene.add.existing(this);
         config.scene.physics.add.existing(this);
         this.setCollideWorldBounds(true);
-  
-        
         this.body.setSize(16, 23);
         this.body.setOffset(8, 8);
 
@@ -43,10 +42,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite
      
       if (!this.death)
       {
-        var canJump = this.body.blocked.down;
-        var blockedLeft=this.body.blocked.left;
-        var blockedRight=this.body.blocked.right;
         
+       
+          var canJump = this.body.blocked.down;
+          var blockedLeft=this.body.blocked.left;
+          var blockedRight=this.body.blocked.right;
+      
+          if (canJump && this.onSpring)
+          {
+            canJump=false;
+          }  
+
+
+
+          
+              
         if (canJump)
         {
           this.jumping=false;
@@ -55,11 +65,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite
           this.canWallGrab=false;
           this.canWallJump=true;
         }
+
+  
         if (!canJump)
         {
+          this.onSpring=false;
           if (blockedLeft || blockedRight)
           {
-           
             this.canWallGrab=true;
             if (!config.scene.cursors.up.isDown)
             {
@@ -109,30 +121,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite
           }
      
         }
-
     //  }
-        
         if (this.canDoubleJump && !this.doubleJumping)
         {
 
           if (config.scene.cursors.up.isDown)
-          {
-           
+          {   
             this.doubleJumping=true;
             this.canDoubleJump=false;
             this.body.setVelocityY(-this.doubleJumpingVelocity); 
-            this.anims.play('frogDoubleJumpAnim', false).once('animationcomplete', ()=>{    
-             
+            this.anims.play('frogDoubleJumpAnim', false).once('animationcomplete', ()=>{        
             this.doubleJumping=false;
             this.haveDoubleJumped=true;              
             });
-
           }
-
         }
-
     }
-
       //wall Grab
       if (this.wallGrab)
         {        
@@ -188,7 +192,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         {
           if (!this.haveWallJumped)
           {
-            console.log('right');
+          
             this.body.setVelocityX(this.speed);
             this.flipX=false;
             if (!this.jumping && !this.doubleJumping && !this.wallGrab)
@@ -204,7 +208,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         {
           if (!this.haveWallJumped)
           {
-            console.log('left');
+  
             this.body.setVelocityX(-this.speed);
             this.flipX=true;
            if (!this.jumping && !this.doubleJumping && !this.wallGrab)
@@ -240,17 +244,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite
        {        
          if (this.playDeathAnimation)
          {
-          this.body.setEnable(false);
-          this.playDeathAnimation=false;
-          this.anims.play('frogDeathAnim', false).once('animationcomplete', ()=>{
+            this.body.setEnable(false);
+            this.playDeathAnimation=false;
+            this.anims.play('frogDeathAnim', false).once('animationcomplete', ()=>{
             config.scene.gameState=gameStates.PLAYER_DEATH;
           });
-         }
-          
-       }
-      
+         }  
+       } 
     }
-    
   }
 
 

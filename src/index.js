@@ -18,7 +18,8 @@ const config = {
     default : 'arcade',
     arcade: {
     gravity: {y: 1500},
-    debug: false
+    debug: //false,
+    true
     },
   },
   scene: [LevelIntroScene,GameScene,LevelEndScene]
@@ -26,5 +27,5 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-game.level=levels.LEVEL_1; //FIRST LEVEL
+game.level=levels.LEVEL_5; //FIRST LEVEL
 

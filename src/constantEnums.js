@@ -13,6 +13,7 @@ export const enemyStates={
     SLEEP : "Sleep",    //Enemy has taken hit and is in idle state
     SHOOT : "Shoot",    //Shoot projectile
     SHELL_IDLE : "Shell_Idle", //Shell Idle
+    TARGET_IN_RANGE : "In_Range", //Player in range
     SHELL_ACTIVE : "Shell_Active", //Shell Moving
     SHELL_HIT_SIDE : "Shell_Hit_Side", // SHELL Side collision
     SHELL_HIT_TOP : "Shell_Hit_Top", //shell hit from top (Jumped on)
@@ -50,7 +51,8 @@ export const enemyTypes={
     ROCK_ENEMY2:"rock_enemy_2",
     ROCK_ENEMY3:"rock_enemy_3",
     BEE_ENEMY:"bee_Enemy",
-    RADISH_ENEMY:"radish_Enemy"
+    RADISH_ENEMY:"radish_Enemy",
+    TRUNK_ENEMY: "trunk_Enemy"
 }
 
 export const levels={
@@ -80,6 +82,13 @@ export const levels={
         type : 'Level',
         mapName : 'level4Map',
         mapData : 'src/assets/level_4.json',
+        next : 'LEVEL_5'
+    },
+    LEVEL_5:{
+        name : 'Level 5',
+        type : 'Level',
+        mapName : 'level5Map',
+        mapData : 'src/assets/level_5.json',
         next : 'LEVEL_1'
     },
     LEVEL_END:
@@ -107,8 +116,11 @@ export const gameStates= {
 
 export const trapTypes = {
     SPIKE_TRAP : "spike_Trap",
+    SPIKE_TRAP_RIGHT : "spike_Trap_Right",
+    SPIKE_TRAP_LEFT : "spike_Trap_Left",
     SPIKED_BALL:  "spiked_Ball",
-    SPIKED_BALL_CHAIN: "spike_Ball_Chain"
+    SPIKED_BALL_CHAIN: "spike_Ball_Chain",
+    SAW_TRAP : "saw_Trap"
 };
 
 export const fruitTypes ={
@@ -119,11 +131,17 @@ export const fruitTypes ={
 };
 
 export const objectTypes={
-    BOX1 : 'box1'
+    BOX1 : 'box1',
+    SPRING : 'spring_Object'
 };
 
 export const boxStates={
     HIT : "hit",
     IDLE : "idle",
     BROKEN : "broken"
+};
+
+export const springStates={
+    IDLE : "idle",
+    ACTIVE : "active"
 };
