@@ -1,4 +1,4 @@
-import { boxStates, directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, projectileStates } from "./constantEnums";
+import { boxStates, directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, projectileStates, springStates } from "./constantEnums";
 import { checkRemainingFruit } from "./gameLogic";
 
 export function playerTouchShell(enemy,player)
@@ -214,12 +214,25 @@ export function playerTouchBox(player, box)
         if (box.state !== boxStates.HIT)
         {
             box.state = boxStates.HIT;
-        }
-        
+        }   
     }
-
-
 }
+
+export function playerTouchSpring(player, spring)
+{
+    
+    if (player.body.touching.down)
+    {
+       player.onSpring=true;
+        if (spring.state !== springStates.ACTIVE)
+        {
+            spring.state = springStates.ACTIVE;
+            player.setVelocityY(-spring.springVelocity);
+            
+        }
+    }
+}
+
 
 export function enemyProjectileCollision(projectile)
 {

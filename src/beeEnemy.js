@@ -33,8 +33,9 @@ export class BeeEnemy extends Enemy
             //shooting delaytime
             this.shootingDelayTime=1500;
             //SIZE
-            //this.body.setSize(25, 19);
-            //this.body.setOffset(5, 12);
+            this.body.setSize(20, 30);
+            //offset
+            this.body.setOffset(8, 4);
         }
     }
     
@@ -152,6 +153,7 @@ export class BeeEnemy extends Enemy
 
         if (this.state===enemyStates.DEATH)
         {
+            
             this.killEntity();
         }
 
