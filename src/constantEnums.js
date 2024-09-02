@@ -21,7 +21,10 @@ export const enemyStates={
     RADISH_GROUND : "Radish enemy ground", //radish enemy ground
     DEATH : "Death",     //Death
     SPAWN : "Spawn",     //Rock enemy spawn new enemies once hit
-    HIT_STATE: "Hit_State" // rock enemy state used to show sprite
+    HIT_STATE: "Hit_State", // rock enemy state used to show sprite
+    GHOST_HIDDEN: "Ghost_Hidden",
+    GHOST_APPEARING: "Ghost_Appearing",
+    GHOST_DISAPPEARING: "Ghost_Disappearing"
 };
 
 export const projectileStates={
@@ -52,7 +55,9 @@ export const enemyTypes={
     ROCK_ENEMY3:"rock_enemy_3",
     BEE_ENEMY:"bee_Enemy",
     RADISH_ENEMY:"radish_Enemy",
-    TRUNK_ENEMY: "trunk_Enemy"
+    TRUNK_ENEMY: "trunk_Enemy",
+    CHICKEN_ENEMY: "chicken_Enemy",
+    GHOST_ENEMY: "ghost_Enemy"
 }
 
 export const levels={
@@ -105,7 +110,8 @@ export const mapObjectTypes={
     FRUIT : 'fruits',
     TRAPS : 'traps',
     OBJECTS : 'objects',
-    PLAYER_START : 'player_Start'
+    PLAYER_START : 'player_Start',
+    PLATFORMS : 'platforms'
 }
 
 export const gameStates= {
@@ -120,19 +126,22 @@ export const trapTypes = {
     SPIKE_TRAP_LEFT : "spike_Trap_Left",
     SPIKED_BALL:  "spiked_Ball",
     SPIKED_BALL_CHAIN: "spike_Ball_Chain",
-    SAW_TRAP : "saw_Trap"
+    SAW_TRAP : "saw_Trap",
+    SAW_TRAP_4_DIRECTION : "saw_Trap_4_Direction"
 };
 
 export const fruitTypes ={
     ORANGE : "orange",
     BANANA : "banana",
     APPLE : "apple",
-    STRAWBERRY : "strawberry"
+    STRAWBERRY : "strawberry",
+    MELON : "melon"
 };
 
 export const objectTypes={
     BOX1 : 'box1',
-    SPRING : 'spring_Object'
+    SPRING : 'spring_Object',
+    SAW_TRAP_CHAIN : 'sawChain'
 };
 
 export const boxStates={
@@ -144,4 +153,14 @@ export const boxStates={
 export const springStates={
     IDLE : "idle",
     ACTIVE : "active"
+};
+
+export const platformTypes={
+    FAN_PLATFORM:"fanPlatform"
+};
+export const platformStates={
+    ACTIVE : "active",
+    PLAYER_ON : "player_on",
+    RESET : "reset"
+    
 };

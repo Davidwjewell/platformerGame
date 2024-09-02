@@ -1,4 +1,4 @@
-import { boxStates, directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, projectileStates, springStates } from "./constantEnums";
+import { boxStates, directionsToMove, enemyStates, enemyTypes, flagStates, fruitStates, platformStates, projectileStates, springStates } from "./constantEnums";
 import { checkRemainingFruit } from "./gameLogic";
 
 export function playerTouchShell(enemy,player)
@@ -103,11 +103,25 @@ export function shellTouchShell(shell1,shell2)
 
 }
 
+
+export function checkEnemyTypeCollision(enemy,player)
+{
+     //EXCEPTION FOR GHOST ENEMY 
+     if (enemy.type === enemyTypes.GHOST_ENEMY)
+        {
+            if (enemy.state === enemyStates.GHOST_HIDDEN)
+            {
+                return false
+            }
+
+            return true;
+
+        }
+}
+
 export function playerTouchEnemy(enemy,player)
 { 
 
-
-      
          //if enemy not in hit state
         if (enemy.state !== enemyStates.HIT)
         {
@@ -255,4 +269,14 @@ export function shellTouchedBox(shell,box)
         box.state = boxStates.HIT;
    }
     
+}
+
+export function playerTouchPlatform(player,platform)
+{   
+    if (platform.state !==platformStates.PLAYER_ON)
+        {
+            platform.state = platformStates.PLAYER_ON    
+        }
+    
+   
 }

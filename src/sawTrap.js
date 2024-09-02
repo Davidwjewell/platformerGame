@@ -7,10 +7,13 @@ export class SawTrap extends Trap
     {
         super(config.scene,config.x,config.y,'sawTrap');
         this.state=enemyStates.ACTIVE;
-        this.directionMoving=directionsToMove.LEFT
+        this.directionMoving;
         this.setDepth(0);
         this.speed;
-        this.turns;
+        this.vertical=false;
+        this.turnsArray = {};
+        this.body.setSize(34, 34);
+        this.body.setOffset(2, 2);
         this.assignCustomProperites(config.properties);
         
     }
@@ -28,12 +31,23 @@ export class SawTrap extends Trap
                 this.speed=properties[i].value;
             }
 
-            if (properties[i].name==='turns')
+            if (properties[i].name==='direction')
             {
-                this.speed=properties[i].value;
+                console.log(properties[i].value)
+                if(properties[i].value==='left')
+                {
+                    this.directionMoving=directionsToMove.LEFT;
+                }
+                if(properties[i].value==='down')
+                {
+                    this.directionMoving=directionsToMove.DOWN;
+                }    
             }
 
-            
+            if (properties[i].name==='vertical')
+            {
+                this.vertical=properties[i].value;
+            }
 
         }
 
@@ -41,36 +55,72 @@ export class SawTrap extends Trap
 
     moveEnemy()
     {
-        
-        var touchingLeftSide = this.body.blocked.left;
-        var touchingRightSide = this.body.blocked.right;
+      //  console.log(this.directionMoving)
+        //left to right
+        if (!this.vertical)
+        {
+            var touchingLeftSide = this.body.blocked.left;
+            var touchingRightSide = this.body.blocked.right;
+    
+             //BLOCKED LEFT   
+            if (touchingLeftSide)
+            {
+                this.directionMoving=directionsToMove.RIGHT;
+    
+            }
+    
+            //BLOCKED RIGHT
+    
+            if (touchingRightSide)
+            {
+                this.directionMoving=directionsToMove.LEFT;
+    
+            }
+    
+            //MOVE LEFT    
+            if (this.directionMoving === directionsToMove.LEFT)
+                {
+                    this.body.setVelocityX(-this.speed);
+                    this.flipX=false;
+    
+                }
+            //MOVE RIGHT
+            if (this.directionMoving === directionsToMove.RIGHT)
+                {
+                    this.body.setVelocityX(this.speed);
+                    this.flipX=true;
+    
+                }
+        }
+        var touchingDown = this.body.blocked.down;
+        var touchingUp = this.body.blocked.up;
 
          //BLOCKED LEFT   
-        if (touchingLeftSide)
+        if (touchingDown)
         {
-            this.directionMoving=directionsToMove.RIGHT;
+            this.directionMoving=directionsToMove.UP;
 
         }
 
         //BLOCKED RIGHT
 
-        if (touchingRightSide)
+        if (touchingUp)
         {
-            this.directionMoving=directionsToMove.LEFT;
+            this.directionMoving=directionsToMove.DOWN;
 
         }
 
         //MOVE LEFT    
-        if (this.directionMoving === directionsToMove.LEFT)
+        if (this.directionMoving === directionsToMove.DOWN)
             {
-                this.body.setVelocityX(-this.speed);
+                this.body.setVelocityY(this.speed);
                 this.flipX=false;
 
             }
         //MOVE RIGHT
-        if (this.directionMoving === directionsToMove.RIGHT)
+        if (this.directionMoving === directionsToMove.UP)
             {
-                this.body.setVelocityX(this.speed);
+                this.body.setVelocityY(-this.speed);
                 this.flipX=true;
 
             }
@@ -84,8 +134,9 @@ export class SawTrap extends Trap
         {
             var touchingLeftSide = this.body.blocked.left;
             var touchingRightSide = this.body.blocked.right;
-            //this.moveEnemy();
-            this.body.setVelocityX(-this.speed);
+            this.moveEnemy();
+            //MOVE LEFT    
+          
             this.anims.play('sawTrapRunAnim', true);
         }
     }
