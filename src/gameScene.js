@@ -1,7 +1,7 @@
 
 import {Player} from "./player.js";
-import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox, playerTouchSpring} from "./collisions.js";
-import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlayer, loadTraps } from "./loadfunctions.js";
+import {playerTouchPlatform,fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox, playerTouchSpring, checkEnemyTypeCollision} from "./collisions.js";
+import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlatforms, loadPlayer, loadTraps } from "./loadfunctions.js";
 import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
@@ -106,6 +106,16 @@ this.load.spritesheet('trunkEnemyRun','src/assets/trunkEnemy/trunkEnemyRun.png',
 this.load.spritesheet('trunkEnemyAttack','src/assets/trunkEnemy/trunkEnemyAttack.png', {frameWidth: 64, frameHeight:32});
 this.load.spritesheet('trunkEnemyHit','src/assets/trunkEnemy/trunkEnemyHit.png', {frameWidth: 64, frameHeight:32});
 this.load.image('trunkEnemyProjectile','src/assets/trunkEnemy/trunkEnemyProjectile.png');
+//CHICKEN ENEMY
+this.load.spritesheet('chickenEnemyIdle','src/assets/chickenEnemy/chickenEnemy_Idle.png', {frameWidth: 32, frameHeight:34});
+this.load.spritesheet('chickenEnemyRun','src/assets/chickenEnemy/chickenEnemy_Run.png', {frameWidth: 32, frameHeight:34});
+this.load.spritesheet('chickenEnemyHit','src/assets/chickenEnemy/chickenEnemy_Hit.png', {frameWidth: 32, frameHeight:34});
+//GHOST ENEMY
+this.load.spritesheet('ghostEnemyIdle','src/assets/ghostEnemy/ghostEnemy_Idle.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyHit','src/assets/ghostEnemy/ghostEnemy_Hit.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyAppear','src/assets/ghostEnemy/ghostEnemy_Appear.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyDisappear','src/assets/ghostEnemy/ghostEnemy_Disappear.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyParticles','src/assets/ghostEnemy/ghostEnemy_Particles.png', {frameWidth: 16, frameHeight: 16});
 //BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
@@ -121,6 +131,7 @@ this.load.image('trunkEnemyProjectile','src/assets/trunkEnemy/trunkEnemyProjecti
   this.load.spritesheet('banana',"./src/assets/fruits/banana.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('apple',"./src/assets/fruits/apple.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('strawberry',"./src/assets/fruits/strawberry.png", {frameWidth: 32, frameHeight: 32});
+ this.load.spritesheet('melon',"./src/assets/fruits/melon.png", {frameWidth: 32, frameHeight: 32});
   //FRUIT COLLECTED
   this.load.spritesheet('fruitCollected','./src/assets/fruit_Collected.png', {frameWidth: 32, frameHeight: 32});
   //MAP
@@ -138,6 +149,9 @@ this.load.image('trunkEnemyProjectile','src/assets/trunkEnemy/trunkEnemyProjecti
  //SPRING
  this.load.image('springIdle','./src/assets/spring/spring_Idle.png');
  this.load.spritesheet('springJump','./src/assets/spring/spring_Jump.png',{frameWidth: 28, frameHeight: 28});
+ //platform
+ this.load.spritesheet('platformOn','./src/assets/platforms/platform_On.png',{frameWidth: 32, frameHeight: 10});
+ this.load.image('platformOff','./src/assets/platforms/platform_Off.png');
 }
 
 
@@ -162,6 +176,8 @@ create()
   this.objects=this.physics.add.group();
 
   this.springs=this.physics.add.group();
+
+  this.platforms=this.physics.add.group();
 
   //MAP
   this.map = this.make.tilemap({ key: this.level.mapName });
@@ -214,6 +230,9 @@ create()
 
     //objects
     loadObjects({context:this,map:this.map});
+
+    //platforms
+    loadPlatforms({context:this,map:this.map});
     
 
   
@@ -345,6 +364,14 @@ this.anims.create({
   frameRate : 20,
   repeat : 0
 });
+
+this.anims.create({
+  key : "melonAnim",
+  frames: this.anims.generateFrameNumbers('melon', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
+
 
 
 
@@ -549,9 +576,73 @@ this.anims.create({
       frameRate: 20,
       repeat: 0});
     
+      this.anims.create({
+        key : 'platformOnAnim',
+        frames : this.anims.generateFrameNumbers('platformOn', { start: 0, end: 3}),
+        frameRate: 20,
+        repeat : 0
+      });
              
-  
+  //CHICKEN ENEMY
+
+  this.anims.create({
+    key : 'chickenEnemyIdleAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyIdle', { start: 0, end: 12}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'chickenEnemyRunAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyRun', { start: 0, end: 13}),
+    frameRate: 20,
+    repeat : 0
+  });
     
+  this.anims.create({
+    key : 'chickenEnemyHitAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+
+  //Ghost Enemy
+
+  this.anims.create({
+    key : 'ghostEnemyIdleAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyIdle', { start: 0, end: 9}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'ghostEnemyHitAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'ghostEnemyAppearAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyAppear', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'ghostEnemyDisappearAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyDisappear', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'ghostEnemyParticlesAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyParticles', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
 
 //SPRING
 
@@ -567,7 +658,7 @@ this.anims.create({
   //physics group
  
   //PLAYER
-  this.physics.add.collider(this.enemies, this.newPlayer, playerTouchEnemy, null, this);
+  this.physics.add.collider(this.enemies, this.newPlayer, playerTouchEnemy, checkEnemyTypeCollision, this);
   this.physics.add.collider(this.newPlayer, worldLayer);
   this.physics.add.collider(this.newPlayer, this.objects, playerTouchBox, null, this);
   //ENEMIES
@@ -594,6 +685,7 @@ this.anims.create({
   this.physics.add.overlap(this.newPlayer, this.fruits, fruitTouched, null, this);
  //TRAPS
  this.physics.add.overlap(this.newPlayer, this.traps, trapTouched, null, this);
+ this.physics.add.collider(this.traps, enemyCollisionLayer);
  //objects
  this.physics.add.collider(this.objects, worldLayer);
  this.physics.add.collider(this.objects, this.enemies, enemyCollision, null, this);
@@ -601,7 +693,8 @@ this.anims.create({
 this.physics.add.collider(this.springs, worldLayer);
 this.physics.add.collider(this.springs, this.enemies, enemyCollision, null, this);
 this.physics.add.collider(this.newPlayer, this.springs, playerTouchSpring, null, this);
-
+//platfomrs
+this.physics.add.collider(this.newPlayer, this.platforms, playerTouchPlatform, null, this);
   
   //CAMERA
 
