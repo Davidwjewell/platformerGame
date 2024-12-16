@@ -1,7 +1,7 @@
 
 import {Player} from "./player.js";
-import {fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox} from "./collisions.js";
-import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlayer, loadTraps } from "./loadfunctions.js";
+import {playerTouchPlatform,fruitTouched, playerTouchEnemy, enemyCollision, projectileTouchPlayer, enemyProjectileCollision, playerTouchedFlag, playerTouchShell, shellTouchEnemy, shellTouchShell, trapTouched, shellTouchedBox, playerTouchBox, playerTouchSpring, checkEnemyTypeCollision} from "./collisions.js";
+import { loadEnemies, loadFlag, loadFruits, loadObjects, loadPlatforms, loadPlayer, loadTraps } from "./loadfunctions.js";
 import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
@@ -9,16 +9,27 @@ import { flagStates, gameStates, levels } from "./constantEnums.js";
 
 
 export class GameScene extends Phaser.Scene{
-    constructor(config)
+    constructor()
     {
         super({key : 'GameScene'});
+        {
+         // this.gameState=gameStates.RUN;
+        }
+       
 
     }
 
+    init()
+    {
+      
+      this.level=this.game.level;
+      console.log(this.level);
+      //levels[levelToLoad]
+    }
+/*
     init(levelToLoad)
 {
    
-
   if (Object.entries(levelToLoad).length === 0)
   {
     //load first level
@@ -30,9 +41,9 @@ else
 {
   this.level=levels[levelToLoad];
 }
-
-
 }
+*/
+
 preload() {
 
  
@@ -84,7 +95,28 @@ this.load.spritesheet('beeEnemyIdle','src/assets/beeEnemy/beeEnemy_Idle.png',{fr
 this.load.spritesheet('beeEnemyHit','src/assets/beeEnemy/beeEnemy_Hit.png',{frameWidth:36, frameHeight : 34});
 this.load.spritesheet('beeEnemyAttack','src/assets/beeEnemy/beeEnemy_Attack.png',{frameWidth:36, frameHeight : 34});
 this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
-  //BACKGROUNDS
+//RADISH ENEMY
+this.load.spritesheet('radishEnemyAir','src/assets/radishEnemy/radishEnemy_Air.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyHit','src/assets/radishEnemy/radishEnemy_Hit.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyIdleGround','src/assets/radishEnemy/radishEnemy_Idle_Ground.png',{frameWidth:30 , frameHeight : 38});
+this.load.spritesheet('radishEnemyRun','src/assets/radishEnemy/radishEnemy_Run.png',{frameWidth:30 , frameHeight : 38});
+//TRUNK ENEMY
+this.load.spritesheet('trunkEnemyIdle','src/assets/trunkEnemy/trunkEnemyIdle.png', {frameWidth: 64, frameHeight:32}); 
+this.load.spritesheet('trunkEnemyRun','src/assets/trunkEnemy/trunkEnemyRun.png', {frameWidth: 64, frameHeight:32}); 
+this.load.spritesheet('trunkEnemyAttack','src/assets/trunkEnemy/trunkEnemyAttack.png', {frameWidth: 64, frameHeight:32});
+this.load.spritesheet('trunkEnemyHit','src/assets/trunkEnemy/trunkEnemyHit.png', {frameWidth: 64, frameHeight:32});
+this.load.image('trunkEnemyProjectile','src/assets/trunkEnemy/trunkEnemyProjectile.png');
+//CHICKEN ENEMY
+this.load.spritesheet('chickenEnemyIdle','src/assets/chickenEnemy/chickenEnemy_Idle.png', {frameWidth: 32, frameHeight:34});
+this.load.spritesheet('chickenEnemyRun','src/assets/chickenEnemy/chickenEnemy_Run.png', {frameWidth: 32, frameHeight:34});
+this.load.spritesheet('chickenEnemyHit','src/assets/chickenEnemy/chickenEnemy_Hit.png', {frameWidth: 32, frameHeight:34});
+//GHOST ENEMY
+this.load.spritesheet('ghostEnemyIdle','src/assets/ghostEnemy/ghostEnemy_Idle.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyHit','src/assets/ghostEnemy/ghostEnemy_Hit.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyAppear','src/assets/ghostEnemy/ghostEnemy_Appear.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyDisappear','src/assets/ghostEnemy/ghostEnemy_Disappear.png', {frameWidth: 44, frameHeight: 30});
+this.load.spritesheet('ghostEnemyParticles','src/assets/ghostEnemy/ghostEnemy_Particles.png', {frameWidth: 16, frameHeight: 16});
+//BACKGROUNDS
   this.load.image('blueBackground','src/assets/blue_Background.png');
   //TILES
   this.load.image("tiles", "./src/assets/tileset_Extruded.png");
@@ -98,29 +130,33 @@ this.load.image('beeEnemyBullet','src/assets/beeEnemy/beeEnemy_Bullet.png');
   this.load.spritesheet('orange',"./src/assets/orange.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('banana',"./src/assets/fruits/banana.png", {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('apple',"./src/assets/fruits/apple.png", {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('strawberry',"./src/assets/fruits/strawberry.png", {frameWidth: 32, frameHeight: 32});
+ this.load.spritesheet('melon',"./src/assets/fruits/melon.png", {frameWidth: 32, frameHeight: 32});
   //FRUIT COLLECTED
   this.load.spritesheet('fruitCollected','./src/assets/fruit_Collected.png', {frameWidth: 32, frameHeight: 32});
   //MAP
   this.load.tilemapTiledJSON(this.level.mapName,this.level.mapData);
   //TRAPS
   this.load.image('spikeTrap','./src/assets/traps/spike_Trap.png');
+  this.load.image('spikeTrapRight','./src/assets/traps/spike_Trap_Right.png');
+  this.load.image('spikeTrapLeft','./src/assets/traps/spike_Trap_Left.png');
   this.load.image('spikeBallTrap','./src/assets/traps/spiked_Ball_Trap.png');
   this.load.image('spikeBallChain','./src/assets/traps/spiked_Ball_Chain.png');
- 
-  
-
+  //SAW TRAP
+  this.load.image('sawTrap','./src/assets/traps/saw_Trap_Off.png');
+  this.load.image('sawTrapChain','./src/assets/traps/saw_Trap_chain.png');
+  this.load.spritesheet('sawTrapRun','./src/assets/traps/saw_Trap_Run.png',{frameWidth: 38, frameHeight: 38});
+ //SPRING
+ this.load.image('springIdle','./src/assets/spring/spring_Idle.png');
+ this.load.spritesheet('springJump','./src/assets/spring/spring_Jump.png',{frameWidth: 28, frameHeight: 28});
+ //platform
+ this.load.spritesheet('platformOn','./src/assets/platforms/platform_On.png',{frameWidth: 32, frameHeight: 10});
+ this.load.image('platformOff','./src/assets/platforms/platform_Off.png');
 }
 
 
 create()
 {
-
-  
-  
-  let { width, height } = this.sys.game.canvas;
-
-
-  
 //INPUT
   this.cursors = this.input.keyboard.createCursorKeys();
   //PHYSICS GROUPS
@@ -139,23 +175,26 @@ create()
 });
   this.objects=this.physics.add.group();
 
+  this.springs=this.physics.add.group();
+
+  this.platforms=this.physics.add.group();
+
   //MAP
   this.map = this.make.tilemap({ key: this.level.mapName });
 
    //LAYERS
 
-   
 
   const tileset = this.map.addTilesetImage("platformer_Assets","tiles",16,16,1,2);
-
    //background
   this.tileBackground = this.add.tileSprite(0,0,this.map.widthInPixels*2,this.map.heightInPixels*2,"blueBackground");
 
-  const worldLayer = this.map.createStaticLayer("World", tileset, 0, 0);
+  const worldLayer = this.map.createLayer("World", tileset, 0, 0);
+  worldLayer.setDepth(1);
   //const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
   
 
-  const enemyCollisionLayer = this.map.createStaticLayer("enemyColliders",tileset,0,0);
+  const enemyCollisionLayer = this.map.createLayer("enemyColliders",tileset,0,0);
   enemyCollisionLayer.setVisible(false);
 
  //COLLISIONS LAYERS
@@ -191,6 +230,9 @@ create()
 
     //objects
     loadObjects({context:this,map:this.map});
+
+    //platforms
+    loadPlatforms({context:this,map:this.map});
     
 
   
@@ -200,7 +242,7 @@ this.anims.create({
   key: 'frogIdleAnim',
   frames: this.anims.generateFrameNumbers('frogIdle', { start: 0, end: 10 }),
   frameRate: 20,
-  repeat: -1
+  repeat: 0
 
 });
 
@@ -208,7 +250,7 @@ this.anims.create({
   key: 'frogRunAnim',
   frames: this.anims.generateFrameNumbers('frogRun', { start: 0, end: 11 }),
   frameRate: 20,
-  repeat: -1
+  repeat: 0
 
 });
 
@@ -222,7 +264,7 @@ this.anims.create({
 this.anims.create({
   key: 'frogWallJumpAnim',
   frames: this.anims.generateFrameNumbers('frogWallJump', { start: 0, end: 4}),
-  frameRate: 20,
+  frameRate: 50,
   repeat: 0
 });
 
@@ -315,6 +357,22 @@ this.anims.create({
   frameRate : 20,
   repeat : 0
 });
+
+this.anims.create({
+  key : "strawberryAnim",
+  frames: this.anims.generateFrameNumbers('strawberry', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
+
+this.anims.create({
+  key : "melonAnim",
+  frames: this.anims.generateFrameNumbers('melon', {start :0, end :16}),
+  frameRate : 20,
+  repeat : 0
+});
+
+
 
 
 
@@ -455,25 +513,152 @@ this.anims.create({
 });
 
 
+this.anims.create({
+  key: 'radishEnemyAirAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyAir', { start: 0, end: 5}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'radishEnemyHitAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyHit', { start: 0, end: 4}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'radishEnemyIdleGroundAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyIdleGround', { start: 0, end: 8}),
+  frameRate: 20,
+  repeat: 0
+});
+
+this.anims.create({
+  key: 'radishEnemyRunAnim',
+  frames: this.anims.generateFrameNumbers('radishEnemyRun', { start: 0, end: 11}),
+  frameRate: 20,
+  repeat: 0
+});
+
+//Trunk enemy
+
+this.anims.create({ 
+  key: 'trunkEnemyRunAnim',
+  frames: this.anims.generateFrameNumbers('trunkEnemyRun', { start: 0, end: 13}),
+  frameRate: 20,
+  repeat: 0
+});
+
+  this.anims.create({ 
+    key: 'trunkEnemyIdleAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyIdle', { start: 0, end: 17}),
+    frameRate: 20,
+    repeat: 0
+  });
+
+  this.anims.create({ 
+    key: 'trunkEnemyAttackAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyAttack', { start: 0, end: 10}),
+    frameRate: 20,
+    repeat: 0
+  });
+  
+  this.anims.create({ 
+    key: 'trunkEnemyHitAnim',
+    frames: this.anims.generateFrameNumbers('trunkEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat: 0});
+  
+    this.anims.create({ 
+      key: 'sawTrapRunAnim',
+      frames: this.anims.generateFrameNumbers('sawTrapRun', { start: 0, end: 7}),
+      frameRate: 20,
+      repeat: 0});
+    
+      this.anims.create({
+        key : 'platformOnAnim',
+        frames : this.anims.generateFrameNumbers('platformOn', { start: 0, end: 3}),
+        frameRate: 20,
+        repeat : 0
+      });
+             
+  //CHICKEN ENEMY
+
+  this.anims.create({
+    key : 'chickenEnemyIdleAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyIdle', { start: 0, end: 12}),
+    frameRate: 20,
+    repeat : 0
+  });
+
+  this.anims.create({
+    key : 'chickenEnemyRunAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyRun', { start: 0, end: 13}),
+    frameRate: 20,
+    repeat : 0
+  });
+    
+  this.anims.create({
+    key : 'chickenEnemyHitAnim',
+    frames : this.anims.generateFrameNumbers('chickenEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat : 0
+  });
 
 
+  //Ghost Enemy
 
+  this.anims.create({
+    key : 'ghostEnemyIdleAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyIdle', { start: 0, end: 9}),
+    frameRate: 20,
+    repeat : 0
+  });
 
+  this.anims.create({
+    key : 'ghostEnemyHitAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyHit', { start: 0, end: 4}),
+    frameRate: 20,
+    repeat : 0
+  });
 
+  this.anims.create({
+    key : 'ghostEnemyAppearAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyAppear', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
 
+  this.anims.create({
+    key : 'ghostEnemyDisappearAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyDisappear', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
 
+  this.anims.create({
+    key : 'ghostEnemyParticlesAnim',
+    frames : this.anims.generateFrameNumbers('ghostEnemyParticles', { start: 0, end: 3}),
+    frameRate: 20,
+    repeat : 0
+  });
 
+//SPRING
 
-
-// PLAYER
-  //this.newPlayer = new Player({scene:this,x:100,y:100});
+this.anims.create({
+  key: 'springJumpAnim',
+  frames: this.anims.generateFrameNumbers('springJump', { start: 0, end: 7}),
+  frameRate: 20,
+  repeat: 0
+});
 
 
   //COLLIDERS
   //physics group
  
   //PLAYER
-  this.physics.add.collider(this.enemies, this.newPlayer, playerTouchEnemy, null, this);
+  this.physics.add.collider(this.enemies, this.newPlayer, playerTouchEnemy, checkEnemyTypeCollision, this);
   this.physics.add.collider(this.newPlayer, worldLayer);
   this.physics.add.collider(this.newPlayer, this.objects, playerTouchBox, null, this);
   //ENEMIES
@@ -500,13 +685,16 @@ this.anims.create({
   this.physics.add.overlap(this.newPlayer, this.fruits, fruitTouched, null, this);
  //TRAPS
  this.physics.add.overlap(this.newPlayer, this.traps, trapTouched, null, this);
+ this.physics.add.collider(this.traps, enemyCollisionLayer);
  //objects
  this.physics.add.collider(this.objects, worldLayer);
  this.physics.add.collider(this.objects, this.enemies, enemyCollision, null, this);
-
-
-
-
+//springs
+this.physics.add.collider(this.springs, worldLayer);
+this.physics.add.collider(this.springs, this.enemies, enemyCollision, null, this);
+this.physics.add.collider(this.newPlayer, this.springs, playerTouchSpring, null, this);
+//platfomrs
+this.physics.add.collider(this.newPlayer, this.platforms, playerTouchPlatform, null, this);
   
   //CAMERA
 
@@ -515,35 +703,38 @@ this.anims.create({
   this.cameras.main.startFollow(this.newPlayer, true);
 
 
-
-
+  //this.cameras.main.fadeIn(2000, 0, 0, 0);
+  
 }
 
 
 update(time)
 {
-
   //GAMESTATE RUN
   if (this.gameState=== gameStates.RUN)
   {
     this.tileBackground.tilePositionY-=0.5;
 
 
-    this.newPlayer.update({scene:this});
+    this.newPlayer.update({time : time, scene:this});
    
      this.gameObjects.getChildren().forEach((enemy)=>{
      enemy.update({time: time,scene:this});
     });
 
   }
-  //GAMESTATE STOP - LEVEL FINISHED
 
+  //GAMESTATE - PLAYER DIED
+  if (this.gameState === gameStates.PLAYER_DEATH)
+  {
+    this.scene.stop(); 
+    this.scene.start('LevelIntroScene'); 
+  }
+  //GAMESTATE STOP - LEVEL FINISHED
   if (this.gameState === gameStates.STOP)
   {
-    this.scene.stop();         
-    console.log(this.level.next);
-    this.scene.start('GameScene',this.level.next); 
-
+    this.scene.stop();
+    this.loadNextLevel();
   }
    
 
@@ -560,6 +751,23 @@ update(time)
     }
       
 }
+}
+
+loadNextLevel()
+{
+   console.log('level finished');
+
+    this.game.level=levels[this.level.next];
+    console.log(this.game.level);
+    if (this.game.level.type==='Level')
+    {
+      this.scene.start('LevelIntroScene'); 
+    }
+    if (this.game.level.type==='end_Screen')
+    {
+      this.scene.start('LevelEndScene');
+    }
+    
 }
 
 }

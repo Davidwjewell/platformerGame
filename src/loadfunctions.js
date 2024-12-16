@@ -1,9 +1,10 @@
 import { EnemyPlant } from "./assets/enemyPlant.js";
-import { enemyTypes, fruitTypes, mapObjectTypes, objectTypes, trapTypes } from "./constantEnums.js";
+import { enemyTypes, fruitTypes, mapObjectTypes, objectTypes, platformTypes, trapTypes } from "./constantEnums.js";
 import { MushRoomEnemy } from "./enemyMushroom.js";
 import { SnailEnemy } from "./enemySnail.js";
 import { Flag } from "./flag.js";
 import { Orange } from "./orange.js";
+import { Melon } from "./melon.js"
 import { SpikeTrap } from "./spikeTrap.js";
 import { Banana } from "./banana.js";
 import { Box, Box1 } from "./box.js";
@@ -13,6 +14,18 @@ import { RockEnemy1, RockEnemy2, RockEnemy3 } from "./rockEnemy.js";
 import { Apple } from "./apple.js";
 import { Player } from "./player.js";
 import { BeeEnemy } from "./beeEnemy.js";
+import { Strawberry } from "./strawberry.js";
+import { RadishEnemy } from "./radishEnemy.js";
+import { Spring } from "./spring.js";
+import { TrunkEnemy } from "./trunkEnemy.js";
+import { SpikeTrapLeft } from "./spikeTrapLeft.js";
+import { SpikeTrapRight } from "./spikeTrapRight.js";
+import { SawTrap } from "./sawTrap.js";
+import { SawTrapChain } from "./sawTrapChain.js";
+import { FanPlatform } from "./platform.js";
+import { ChickenEnemy } from "./chickenEnemy.js";
+import { GhostEnemy } from "./ghostEnemy.js";
+import { SawTrapFourDirection } from "./sawTrapFourDirection.js";
 
 
 
@@ -28,7 +41,7 @@ export function loadPlayer(config)
         {
             config.context.newPlayer = new Player({scene:config.context,x:playerStartLocation.x,y:playerStartLocation.y});
         }
-        console.log(playerStartLocation);
+       // console.log(playerStartLocation);
     }
 }
 
@@ -126,6 +139,30 @@ export function addEnemyByType(enemy,scene)
                     new BeeEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
                     break;
                 }
+            case enemyTypes.RADISH_ENEMY:
+                {
+                    new RadishEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+                }
+              case enemyTypes.TRUNK_ENEMY:
+              {
+                  new TrunkEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                  break;
+              }  
+              case enemyTypes.CHICKEN_ENEMY:
+              {
+                    new ChickenEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                    break;
+              }
+             case enemyTypes.GHOST_ENEMY:
+             {
+                new GhostEnemy({scene:scene,x:enemy.x+enemy.width/2,y:enemy.y-enemy.height/2});
+                break;
+             } 
+
+
+    
+
             
         
     }
@@ -208,11 +245,23 @@ export function loadFruits(config)
                         break;
                     }
                     case fruitTypes.APPLE:
-                        {
-                            console.log('new apple')
-                            new Apple({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
-                            break;
-                        }    
+                    {
+                        //console.log('new apple')
+                        new Apple({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }    
+                    case fruitTypes.STRAWBERRY:
+                    {
+                         //console.log('new strawberry')
+                        new Strawberry({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }  
+                    case fruitTypes.MELON:
+                    {
+                        //console.log('new strawberry')
+                        new Melon({scene:config.context,x:fruit.x+fruit.width/2,y:fruit.y-fruit.height/2});
+                        break;
+                    }          
 
             }
             
@@ -236,12 +285,8 @@ export function loadTraps(config)
             if (config.map.objects[i].name === mapObjectTypes.TRAPS)
             {
                  //if exists 
-                 trapLocations = config.map.getObjectLayer('traps')['objects'];
-               
+                 trapLocations = config.map.getObjectLayer('traps')['objects'];     
             }
-
-         
-
         }     
 
     }
@@ -273,9 +318,35 @@ function addTrapByType(trap, scene)
         case trapTypes.SPIKE_TRAP:
             {   
                     
-                new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2});
+                new SpikeTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
                 break;
             }
+            case trapTypes.SPIKE_TRAP_LEFT:
+            {   
+                    
+                new SpikeTrapLeft({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
+                break;
+            }
+            case trapTypes.SPIKE_TRAP_RIGHT:
+            {   
+                    
+                new SpikeTrapRight({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, rotation: trap.rotation});
+                break;
+            }
+            case trapTypes.SAW_TRAP:
+                {   
+                    console.log(trap);    
+                    new SawTrap({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, properties : trap.properties});
+                    break;
+                }
+            
+                case trapTypes.SAW_TRAP_4_DIRECTION:
+                    {   
+                        console.log(trap);    
+                        new SawTrapFourDirection({scene:scene,x:trap.x+trap.width/2,y:trap.y-trap.height/2, properties : trap.properties});
+                        break;
+                    }    
+
 
         case trapTypes.SPIKED_BALL:
         {
@@ -353,9 +424,75 @@ function addObjectByType(object, scene)
             case objectTypes.BOX1 :
                 {
                     new Box1({scene:scene,x:object.x+object.width/2,y:object.y-object.height/2});
-
+                    break;
                 }
+            case objectTypes.SPRING :
+            {
+                console.log(object);
+                new Spring({scene:scene,x:object.x+object.width/2,y:object.y-11});    
+                break;
+            }    
+            case objectTypes.SAW_TRAP_CHAIN :
+            {
+                console.log(object);
+                new SawTrapChain({scene:scene,x:object.x+object.width/2,y:object.y-object.height/2});    
+                break;
+            }
+        }
 
+
+    }
+
+
+}
+
+
+export function loadPlatforms(config)
+{
+    var objectLocations;
+
+    if (config.map.objects)
+    {
+
+        for (var i=0; i<config.map.objects.length;i++)
+        {
+            if (config.map.objects[i].name === mapObjectTypes.PLATFORMS)
+            {
+                 //if exists 
+                 objectLocations = config.map.getObjectLayer('platforms')['objects'];
+               
+            }
+
+        }     
+
+    }
+
+    if (objectLocations)
+    {
+
+        objectLocations.forEach(object =>{
+        addPlatformByType(object, config.context);
+            
+        });
+      
+
+    }
+
+}
+
+function addPlatformByType(object, scene)
+{
+   
+    if (object)
+    {
+        switch (object.type)
+        {
+            case platformTypes.FAN_PLATFORM:
+                {
+                    new FanPlatform({scene:scene,x:object.x+object.width/2,y:object.y-object.height/2});
+                    break;
+                }
+            
         }
 
 

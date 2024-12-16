@@ -22,15 +22,8 @@ export class MushRoomEnemy extends Enemy
             //CHECK WHETHER ENEMY IS IN HIT STATE
             this.checkForHit=true;
             //SIZE
-        
-     
-            this.body.setSize(25, 19);
-            this.body.setOffset(5, 12);
-          
-           
-            
-            
-
+            this.body.setSize(23, 20);
+            this.body.setOffset(5, 13);
         }         
 
 

@@ -25,8 +25,8 @@ export class SnailEnemy extends Enemy
             //SIZE
         
      
-            this.body.setSize(35, 22);
-            this.body.setOffset(4, 2);
+            this.body.setSize(30, 21);
+            this.body.setOffset(4, 3);
           
            
             

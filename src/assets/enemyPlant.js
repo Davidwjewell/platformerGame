@@ -21,17 +21,16 @@ export class EnemyPlant extends Enemy
         //is shooting
         this.isShooting=false;
         //shooting delaytime
-        this.shootingDelayTime=3000;
+        this.shootingDelayTime=2500;
         //check for hit
         this.checkForHit=true;
        //set immovable
-
         this.setImmovable(true);
-        
-        this.body.setSize(28, 38);
-        this.body.setOffset(12,4);
-
-
+        //setSize
+        this.body.setSize(28, 33);
+        this.body.setOffset(12,9);
+        //Offset for firing projectile
+        this.projectileOffsetY=-5;
     }
 
     update(config)
@@ -85,13 +84,18 @@ export class EnemyPlant extends Enemy
             {
             this.isShooting=true; 
             this.anims.play('plantEnemyShootAnim', false).once('animationcomplete', () =>{
-            this.isShooting=false;           
-            new PlantEnemyProjectile({scene: config.scene, x:this.x , y: this.y});
-            this.shootTime=config.time;
-            
+            this.isShooting=false;  
+            if (this.state!==enemyStates.HIT)
+            {
+                new PlantEnemyProjectile({scene: config.scene, x:this.x , y: this.y+this.projectileOffsetY});
+                this.shootTime=config.time;   
+            }      
+               
             });
             
             }
+    
+            
         }    
 
 
